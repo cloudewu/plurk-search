@@ -1,5 +1,9 @@
 export enum FilterType {
   NONE,
-  LIKE,
-  REPLURK,
+  MY,
+  RESPONDED,
+  PRIVATE,
+  FAVORITE,
+  REPLURKED,
+  MENTIONED,
 }

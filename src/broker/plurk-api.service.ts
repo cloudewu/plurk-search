@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PlurkClient } from 'plurk2';
+import { FilterType } from '../search/dto/filter-type.enum';
 import type { PlurksDto } from './dto/plurks.dto';
 import { PlurksSerializer } from './plurks.serializer';
 
@@ -21,12 +22,16 @@ export class PlurkApiService {
     );
   }
 
-  async getTimelinePlurks(): Promise<PlurksDto> {
-    const response = await this.sendRequest('/Timeline/getPlurks', {
+  async getTimelinePlurks(filter: FilterType): Promise<PlurksDto> {
+    const params: any = {
       limit: 2,
       minimal_data: true,
       minimal_user: true,
-    });
+    };
+    if (filter !== FilterType.NONE) {
+      params.filter = FilterType[filter].toLowerCase();
+    }
+    const response = await this.sendRequest('/Timeline/getPlurks', params);
     return this.plurkSerializer.serialize(response);
   }
 

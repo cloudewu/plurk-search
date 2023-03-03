@@ -1,4 +1,5 @@
-import { Controller, Get, Logger, ParseEnumPipe, Query } from '@nestjs/common';
+import { Controller, DefaultValuePipe, Get, Logger, Query } from '@nestjs/common';
+import { ParseEnumPipe } from '../pipes/parse-enum.pipe';
 import { FilterType } from './dto/filter-type.enum';
 import { SearchService } from './search.service';
 
@@ -9,10 +10,13 @@ export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
   @Get()
-  async getSearch(
-  @Query('query') query: string,
-    @Query('filter', new ParseEnumPipe(FilterType)) filter: FilterType = FilterType.NONE) {
-    this.logger.log(`Get query ${query}; filter ${filter}.`);
+  async getSearch(@Query('query') query: string,
+    @Query('filter', new ParseEnumPipe(FilterType), new DefaultValuePipe(FilterType.NONE)) filter: FilterType) {
+    this.logRequest('/search', { query, filter: FilterType[filter] });
     return await this.searchService.search(query, filter);
+  }
+
+  private logRequest(endpoint: string, params: any) {
+    this.logger.log(`Received Request: ${endpoint}; params: ${JSON.stringify(params)}`);
   }
 }
