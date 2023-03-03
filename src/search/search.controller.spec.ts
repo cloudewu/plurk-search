@@ -1,5 +1,6 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-import { SearchResponseDto } from './dto/search-response.dto';
+import { PlurksDto } from '../broker/dto/plurks.dto';
+import { FilterType } from './dto/filter-type.enum';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 
@@ -9,17 +10,25 @@ describe('SearchController', () => {
   beforeAll(async() => {
     app = await Test.createTestingModule({
       controllers: [SearchController],
-      providers: [SearchService],
+    }).useMocker(token => {
+      if (token === SearchService) {
+        const response = new PlurksDto();
+        return { search: jest.fn().mockResolvedValue(response) };
+      }
     }).compile();
   });
 
   describe('getSearch', () => {
-    it('should search for the given query', () => {
-      const appController = app.get(SearchController);
+    it('should accept available parameters', async() => {
+      // given
       const query = 'Search query';
-      const response = new SearchResponseDto(query);
-
-      expect(appController.getSearch(query)).toStrictEqual(response);
+      const filter = FilterType.MY;
+      // when
+      const controller = app.get(SearchController);
+      await controller.getSearch(query, filter);
+      // then
+      const service = app.get(SearchService);
+      expect(service.search).toHaveBeenCalledWith(query, filter);
     });
   });
 });
