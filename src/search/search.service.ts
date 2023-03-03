@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { PlurkApiService } from 'src/broker/plurk-api.service';
 import { type FilterType } from './dto/filter-type.enum';
-import { SearchResponseDto } from './dto/search-response.dto';
 
 @Injectable()
 export class SearchService {
-  search(query: string, filter: FilterType): SearchResponseDto {
-    const response = new SearchResponseDto(query);
-    return response;
+  constructor(@Inject(forwardRef(() => PlurkApiService)) private readonly plurkApiService: PlurkApiService) {}
+
+  async search(query: string, filter: FilterType) {
+    const plurks = await this.plurkApiService.getTimelinePlurks();
+    return plurks;
   }
 }

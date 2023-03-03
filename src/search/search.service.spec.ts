@@ -1,12 +1,14 @@
+import type { PlurkApiService } from 'src/broker/plurk-api.service';
 import { FilterType } from './dto/filter-type.enum';
 import { SearchResponseDto } from './dto/search-response.dto';
 import { SearchService } from './search.service';
 
 describe('SearchService', () => {
   let searchService: SearchService;
+  let plurkApiService: PlurkApiService;
 
   beforeAll(async() => {
-    searchService = new SearchService();
+    searchService = new SearchService(plurkApiService);
   });
 
   describe('search', () => {
