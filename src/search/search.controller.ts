@@ -14,9 +14,10 @@ export class SearchController {
   async getSearch(
     @Query('query') query: string,
       @Query('filter', new ParseEnumPipe(FilterType), new DefaultValuePipe(FilterType.NONE)) filter: FilterType,
+      @Query('offset') offset: string | undefined,
   ): Promise<SearchResponseDto> {
-    this.logRequest('/search', { query, filter: FilterType[filter] });
-    return await this.searchService.search(query, filter);
+    this.logRequest('/search', { query, filter: FilterType[filter], offset });
+    return await this.searchService.search(query, filter, offset);
   }
 
   private logRequest(endpoint: string, params: any) {

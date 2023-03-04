@@ -23,12 +23,15 @@ export class PlurkApiService {
     );
   }
 
-  async getTimelinePlurks(filter: FilterType): Promise<PlurksDto> {
+  async getTimelinePlurks(filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
     const params: any = {
       limit: 10,
       minimal_data: true,
       minimal_user: true,
     };
+    if (!isNullish(offset)) {
+      params.offset = offset;
+    }
     if (filter !== FilterType.NONE) {
       params.filter = FilterType[filter].toLowerCase();
     }

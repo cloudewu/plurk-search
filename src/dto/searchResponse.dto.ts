@@ -2,6 +2,7 @@ import { BaseDto } from './base.dto';
 import type { PlurkDto } from './plurk.dto';
 
 export class SearchResponseDto extends BaseDto {
+  request: any;
   plurks!: PlurkDto[];
   counts!: number;
   firstTimestamp?: Date;

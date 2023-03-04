@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { FilterType } from '../dto/filter-type.enum';
 import { PlurkDto } from '../dto/plurk.dto';
@@ -13,11 +14,12 @@ describe('SearchService', () => {
   const mockPlurkApiService = {
     getTimelinePlurks: jest.fn(),
   };
+  const defaultOffset = undefined;
 
   beforeAll(async() => {
     app = await Test.createTestingModule({
       controllers: [SearchController],
-      providers: [SearchService],
+      providers: [ConfigService, SearchService],
     }).useMocker(token => {
       if (token === PlurkApiService) {
         mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto());
@@ -30,16 +32,17 @@ describe('SearchService', () => {
 
   describe('search', () => {
     it('should response SearchResultDto', async() => {
-      expect(await searchService.search('query', FilterType.NONE)).toBeInstanceOf(SearchResponseDto);
+      expect(await searchService.search('query', FilterType.NONE, defaultOffset)).toBeInstanceOf(SearchResponseDto);
     });
 
     it('should request data with the given contraints', async() => {
       // given
       const filter = FilterType.FAVORITE;
+      const offset = new Date('2023-03-04T00:00:00.000Z').toISOString();
       // when
-      await searchService.search('query', filter);
+      await searchService.search('query', filter, offset);
       // then
-      expect(mockPlurkApiService.getTimelinePlurks).toBeCalledWith(filter);
+      expect(mockPlurkApiService.getTimelinePlurks).toBeCalledWith(filter, offset);
     });
 
     it('should add timestamp info in responses', async() => {
@@ -52,7 +55,7 @@ describe('SearchService', () => {
         plurks: [latestPlurk, oldestPlurk],
       }));
       // when
-      let response = await searchService.search(query, FilterType.NONE);
+      let response = await searchService.search(query, FilterType.NONE, defaultOffset);
       // then
       expect(response.firstTimestamp).toStrictEqual(new Date('2023-03-04T00:00:00.000Z'));
       expect(response.firstTimestampStr).toBe('2023-03-04T00:00:00.000Z');
@@ -64,7 +67,7 @@ describe('SearchService', () => {
         plurks: [],
       }));
       // when
-      response = await searchService.search(query, FilterType.NONE);
+      response = await searchService.search(query, FilterType.NONE, defaultOffset);
       // then
       expect(response.firstTimestamp).toBeUndefined();
       expect(response.firstTimestampStr).toBeUndefined();
@@ -84,7 +87,7 @@ describe('SearchService', () => {
       });
       mockPlurkApiService.getTimelinePlurks.mockResolvedValue(plurkList);
       // when
-      const response = await searchService.search(query, FilterType.NONE);
+      const response = await searchService.search(query, FilterType.NONE, defaultOffset);
       // then
       expect(response.plurks.length).toBe(2);
       expect(response.counts).toBe(2);
