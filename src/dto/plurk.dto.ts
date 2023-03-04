@@ -9,4 +9,6 @@ export class PlurkDto extends BaseDto {
   plurkType?: PlurkType;
   content?: string;
   content_html?: string;
+  postTime?: Date;
+  lastEditTime?: Date;
 }

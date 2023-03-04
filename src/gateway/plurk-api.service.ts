@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PlurkClient } from 'plurk2';
+import { isNullish } from '../common/util';
 import { FilterType } from '../dto/filter-type.enum';
 import type { PlurksDto } from '../dto/plurks.dto';
 import { PlurksSerializer } from './plurks.serializer';
@@ -49,7 +50,7 @@ export class PlurkApiService {
   }
 
   private logRequst(url: string, params?: Record<string, string>) {
-    if (params === undefined || params === null) {
+    if (isNullish(params)) {
       params = {};
     }
     this.logger.log(`Send Plurk API Request: ${url}; params: ${JSON.stringify(params)}`);

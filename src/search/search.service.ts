@@ -18,6 +18,8 @@ export class SearchService {
 
   private filterPlurk(plurkList: PlurksDto, query: string): SearchResponseDto {
     const response = new SearchResponseDto();
+    this.addTimestampToResponse(response, plurkList);
+
     this.logger.log(`Got ${plurkList.plurks.length}. Start filtering results`);
     for (const plurk of plurkList.plurks) {
       if (plurk.content?.includes(query) === true) {
@@ -25,7 +27,20 @@ export class SearchService {
       }
     }
     this.logger.log(`Filter finished. #Results = ${response.counts}`);
+
     return response;
+  }
+
+  private addTimestampToResponse(response: SearchResponseDto, plurkList: PlurksDto): void {
+    if (plurkList.plurks.length <= 0) {
+      return;
+    }
+
+    response.firstTimestamp = plurkList.plurks[0].postTime;
+    response.firstTimestampStr = plurkList.plurks[0].postTime?.toISOString();
+    const lastIdx = plurkList.plurks.length - 1;
+    response.lastTimestamp = plurkList.plurks[lastIdx].postTime;
+    response.lastTimestampStr = plurkList.plurks[lastIdx].postTime?.toISOString();
   }
 
   static addPlurkToResponse(response: SearchResponseDto, plurk: PlurkDto) {

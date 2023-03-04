@@ -42,6 +42,36 @@ describe('SearchService', () => {
       expect(mockPlurkApiService.getTimelinePlurks).toBeCalledWith(filter);
     });
 
+    it('should add timestamp info in responses', async() => {
+      const query = 'SEARCH QUERY';
+      const latestPlurk = new PlurkDto({ postTime: new Date('2023-03-04T00:00:00.000Z') });
+      const oldestPlurk = new PlurkDto({ postTime: new Date('2023-03-01T00:00:00.000Z') });
+
+      // given
+      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
+        plurks: [latestPlurk, oldestPlurk],
+      }));
+      // when
+      let response = await searchService.search(query, FilterType.NONE);
+      // then
+      expect(response.firstTimestamp).toStrictEqual(new Date('2023-03-04T00:00:00.000Z'));
+      expect(response.firstTimestampStr).toBe('2023-03-04T00:00:00.000Z');
+      expect(response.lastTimestamp).toStrictEqual(new Date('2023-03-01T00:00:00.000Z'));
+      expect(response.lastTimestampStr).toBe('2023-03-01T00:00:00.000Z');
+
+      // given
+      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
+        plurks: [],
+      }));
+      // when
+      response = await searchService.search(query, FilterType.NONE);
+      // then
+      expect(response.firstTimestamp).toBeUndefined();
+      expect(response.firstTimestampStr).toBeUndefined();
+      expect(response.lastTimestamp).toBeUndefined();
+      expect(response.lastTimestampStr).toBeUndefined();
+    });
+
     it('should filter results by queries', async() => {
       // given
       const query = 'SEARCH QUERY';

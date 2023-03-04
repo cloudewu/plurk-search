@@ -4,8 +4,11 @@ import type { PlurkDto } from './plurk.dto';
 export class SearchResponseDto extends BaseDto {
   plurks!: PlurkDto[];
   counts!: number;
-  endTime?: string;
-  stargTime?: string;
+  firstTimestamp?: Date;
+  firstTimestampStr?: string;
+  lastTimestamp?: Date;
+  lastTimestampStr?: string;
+  next?: string;
 
   constructor(args: Record<string, unknown> = {}) {
     super({
