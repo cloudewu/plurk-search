@@ -1,5 +1,5 @@
-import type { PlurkDto } from '../../broker/dto/plurk.dto';
 import { BaseDto } from './base.dto';
+import type { PlurkDto } from './plurk.dto';
 
 export class SearchResponseDto extends BaseDto {
   plurks!: PlurkDto[];
