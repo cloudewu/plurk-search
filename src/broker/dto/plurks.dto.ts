@@ -1,9 +1,13 @@
+import { BaseDto } from '../../search/dto/base.dto';
 import type { PlurkDto } from './plurk.dto';
 
-export class PlurksDto {
-  plurks: PlurkDto[];
+export class PlurksDto extends BaseDto {
+  plurks!: PlurkDto[];
 
-  constructor() {
-    this.plurks = [];
+  constructor(args: Record<string, unknown> = {}) {
+    super({
+      plurks: [],
+      ...args,
+    });
   }
 }

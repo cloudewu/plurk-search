@@ -24,7 +24,7 @@ export class PlurkApiService {
 
   async getTimelinePlurks(filter: FilterType): Promise<PlurksDto> {
     const params: any = {
-      limit: 2,
+      limit: 10,
       minimal_data: true,
       minimal_user: true,
     };

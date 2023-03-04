@@ -43,12 +43,13 @@ export class PlurksSerializer {
       return null;
     }
 
-    const plurk = new PlurkDto();
-    plurk.id = plurkObj.plurk_id;
-    plurk.ownerId = plurkObj.owner_id;
-    plurk.plurkType = this.serializePlurkType(plurkObj.plurk_type);
-    plurk.content_html = plurkObj.content;
-    plurk.content = plurkObj.content_raw;
+    const plurk = new PlurkDto({
+      id: plurkObj.plurk_id,
+      ownerId: plurkObj.owner_id,
+      plurkType: this.serializePlurkType(plurkObj.plurk_type),
+      content_html: plurkObj.content,
+      content: plurkObj.content_raw,
+    });
     return plurk;
   }
 
@@ -57,10 +58,11 @@ export class PlurksSerializer {
       return null;
     }
 
-    const user = new PlurkUserDto();
-    user.id = userObj.id;
-    user.nickName = userObj.nick_name;
-    user.displayName = userObj.display_name;
+    const user = new PlurkUserDto({
+      id: userObj.id,
+      nickName: userObj.nick_name,
+      displayName: userObj.display_name,
+    });
     return user;
   }
 
