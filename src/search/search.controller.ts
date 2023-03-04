@@ -1,7 +1,7 @@
 import { Controller, DefaultValuePipe, Get, Logger, Query } from '@nestjs/common';
-import { ParseEnumPipe } from '../pipes/parse-enum.pipe';
-import { FilterType } from './dto/filter-type.enum';
-import type { SearchResponseDto } from './dto/searchResponse.dto';
+import { FilterType } from '../dto/filter-type.enum';
+import type { SearchResponseDto } from '../dto/searchResponse.dto';
+import { ParseEnumPipe } from '../pipe/parse-enum.pipe';
 import { SearchService } from './search.service';
 
 @Controller('search')

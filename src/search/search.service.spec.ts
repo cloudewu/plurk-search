@@ -1,11 +1,11 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-import { PlurksDto } from '../broker/dto/plurks.dto';
-import { PlurkApiService } from '../broker/plurk-api.service';
-import { FilterType } from './dto/filter-type.enum';
-import { SearchService } from './search.service';
+import { FilterType } from '../dto/filter-type.enum';
+import { PlurkDto } from '../dto/plurk.dto';
+import { PlurksDto } from '../dto/plurks.dto';
+import { SearchResponseDto } from '../dto/searchResponse.dto';
+import { PlurkApiService } from '../gateway/plurk-api.service';
 import { SearchController } from './search.controller';
-import { SearchResponseDto } from './dto/searchResponse.dto';
-import { PlurkDto } from '../broker/dto/plurk.dto';
+import { SearchService } from './search.service';
 
 describe('SearchService', () => {
   let app: TestingModule;

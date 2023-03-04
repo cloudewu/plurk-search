@@ -1,4 +1,4 @@
-import { BaseDto } from '../../search/dto/base.dto';
+import { BaseDto } from './base.dto';
 import type { PlurkDto } from './plurk.dto';
 
 export class PlurksDto extends BaseDto {

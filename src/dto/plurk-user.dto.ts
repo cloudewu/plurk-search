@@ -1,4 +1,4 @@
-import { BaseDto } from '../../search/dto/base.dto';
+import { BaseDto } from './base.dto';
 
 export class PlurkUserDto extends BaseDto {
   id?: number;

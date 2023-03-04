@@ -1,4 +1,4 @@
-import { BaseDto } from '../../search/dto/base.dto';
+import { BaseDto } from './base.dto';
 import type { PlurkType } from './plurk-type.enum';
 import type { PlurkUserDto } from './plurk-user.dto';
 

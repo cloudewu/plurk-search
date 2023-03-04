@@ -1,5 +1,5 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-import { PlurksDto } from '../broker/dto/plurks.dto';
+import { PlurksDto } from '../gateway/dto/plurks.dto';
 import { FilterType } from './dto/filter-type.enum';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';

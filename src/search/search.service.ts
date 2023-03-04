@@ -1,9 +1,9 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import type { PlurkDto } from '../broker/dto/plurk.dto';
-import type { PlurksDto } from '../broker/dto/plurks.dto';
-import { PlurkApiService } from '../broker/plurk-api.service';
-import { type FilterType } from './dto/filter-type.enum';
-import { SearchResponseDto } from './dto/searchResponse.dto';
+import { type FilterType } from '../dto/filter-type.enum';
+import type { PlurkDto } from '../dto/plurk.dto';
+import type { PlurksDto } from '../dto/plurks.dto';
+import { SearchResponseDto } from '../dto/searchResponse.dto';
+import { PlurkApiService } from '../gateway/plurk-api.service';
 
 @Injectable()
 export class SearchService {
