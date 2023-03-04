@@ -1,73 +1,64 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 河道搜搜 Timeline Search
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Having trouble finding a certain plurk in your Plurk timeline? Remembering seeing some funny plurk and you've liked it but couldn't find it anymore? We feel you!
 
-## Description
+Timeline Search (tmp name) is a tool that helps users to find a plurk with specific content in their timeline.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+For example, it can search the plurks that you've replurked for a certain keyword.
 
-## Installation
+The app is still under developing and has no UI currently, but the goal is to have a simple UI that users can login and do the search.
 
-```bash
-$ npm install
+河道搜搜（暫定名稱）的目標是幫助噗浪使用者在自己的時間軸上搜索特定內容。
+
+比如再已按過愛心的噗中搜索「食譜」，在所有轉噗過的內容中搜索特定標籤……
+
+工具目前正在開發當中，不確定會拖多久，但目標就是這樣 :D
+
+## About the tool
+
+1. Language: [Typescript](https://github.com/microsoft/TypeScript)
+2. Pacakge Manager: [Yarn 2+](https://yarnpkg.com/getting-started/install)
+3. Framework: [Nest](https://github.com/nestjs/nest)
+4. Git hook: [Husky](https://typicode.github.io/husky/#/)
+
+## Getting Started
+
+```
+yarn
+yarn start
 ```
 
-## Running the app
+### Development
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+# recompile upon file changes
+yarn start:dev
+# debug mode & reload upon file changes
+yarn start:debug
 ```
 
-## Test
+ps. this repo reinforces code style and code quality to pass by Husky hook.
+You must fix all issues from eslint before committing, and must pass all tests before pushing.
 
-```bash
-# unit tests
-$ npm run test
+linting
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```
+yarn lint
 ```
 
-## Support
+testing
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+yarn test
+# or run tests upon file changes - extremely useful for TDD
+yarn test:watch
+```
 
-## Stay in touch
+## Bug Report
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Open an issue directly for any bug reports/feature requests/feedbacks.
+Or you can contact me on [Plurk](https://plurk.com/boxbox557).
 
 ## License
 
-  Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This tool is [MIT licensed](https://github.com/cloudewu/plurk-search/blob/master/LICENSE).
