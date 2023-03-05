@@ -1,8 +1,8 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PlurkClient } from 'plurk2';
 import { isNullish } from '../common/util';
-import type { AuthDetail } from '../dto/authDetail.dto';
+import { AuthDetail } from '../dto/authDetail.dto';
 import { FilterType } from '../dto/filter-type.enum';
 import type { PlurksDto } from '../dto/plurks.dto';
 import { PlurksSerializer } from './plurks.serializer';
@@ -20,6 +20,36 @@ export class PlurkApiService {
       this.configService.getOrThrow<string>('PLURK_APP_KEY'),
       this.configService.getOrThrow<string>('PLURK_APP_SECRET'),
     );
+  }
+
+  async getRequestToken(): Promise<{ token: string, secret: string, authPage: string }> {
+    try {
+      this.logger.log('Requesting request token');
+      this.resetAuth();
+      const { token, tokenSecret, authPage } = await this.plurkApi.getRequestToken();
+      this.logger.log(`Token received: ${token}`);
+      return { token, secret: tokenSecret, authPage };
+    } catch (err: any) {
+      this.logger.error('Failed to get reqeust token', err.stack, err.message);
+      throw new HttpException('External server error', HttpStatus.BAD_GATEWAY);
+    } finally {
+      this.resetAuth();
+    }
+  }
+
+  async authenticate(auth: AuthDetail, code: string) {
+    this.setupAuth(auth);
+    try {
+      this.logger.log('Requesting access token');
+      const { token, tokenSecret } = await this.plurkApi.getAccessToken(code);
+      this.logger.log(`Token received: ${token}`);
+      return new AuthDetail({ token, secret: tokenSecret });
+    } catch (err: any) {
+      this.logger.error('Failed to get access token.', err.stack, err.message);
+      throw new BadRequestException('Invalid Verifier');
+    } finally {
+      this.resetAuth();
+    }
   }
 
   async getTimelinePlurks(auth: AuthDetail, filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
@@ -44,11 +74,12 @@ export class PlurkApiService {
       this.logRequst(url, params);
       this.setupAuth(auth);
       response = await this.plurkApi.request(url, params);
-      this.resetAuth();
       this.logResponse(response);
     } catch (err: any) {
       this.logger.error('Failed to retrieve response from Plurk API', err.stack, err.message);
       throw new HttpException('External server error', HttpStatus.BAD_GATEWAY);
+    } finally {
+      this.resetAuth();
     }
     return response;
   }
