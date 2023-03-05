@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PlurkClient } from 'plurk2';
 import { isNullish } from '../common/util';
+import type { AuthDetail } from '../dto/authDetail.dto';
 import { FilterType } from '../dto/filter-type.enum';
 import type { PlurksDto } from '../dto/plurks.dto';
 import { PlurksSerializer } from './plurks.serializer';
@@ -18,12 +19,10 @@ export class PlurkApiService {
     this.plurkApi = new PlurkClient(
       this.configService.getOrThrow<string>('PLURK_APP_KEY'),
       this.configService.getOrThrow<string>('PLURK_APP_SECRET'),
-      this.configService.get<string>('AUTH_TOKEN'),
-      this.configService.get<string>('AUTH_SECRET'),
     );
   }
 
-  async getTimelinePlurks(filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
+  async getTimelinePlurks(auth: AuthDetail, filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
     const params: any = {
       limit: 10,
       minimal_data: true,
@@ -35,15 +34,27 @@ export class PlurkApiService {
     if (filter !== FilterType.NONE) {
       params.filter = FilterType[filter].toLowerCase();
     }
-    const response = await this.sendRequest('/Timeline/getPlurks', params);
+    const response = await this.sendRequest(auth, '/Timeline/getPlurks', params);
     return this.plurkSerializer.serialize(response);
   }
 
-  private async sendRequest(url: string, params?: any) {
+  private setupAuth(auth: AuthDetail) {
+    this.plurkApi.token = auth.token ?? null;
+    this.plurkApi.tokenSecret = auth.secret ?? null;
+  }
+
+  private resetAuth() {
+    this.plurkApi.token = '';
+    this.plurkApi.tokenSecret = '';
+  }
+
+  private async sendRequest(auth: AuthDetail, url: string, params?: any) {
     let response = null;
     try {
       this.logRequst(url, params);
+      this.setupAuth(auth);
       response = await this.plurkApi.request(url, params);
+      this.resetAuth();
       this.logResponse(response);
     } catch (err: any) {
       this.logger.error('Failed to retrieve response from Plurk API', err.stack, err.message);

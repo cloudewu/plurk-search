@@ -32,7 +32,7 @@ describe('SearchService', () => {
 
   describe('search', () => {
     it('should response SearchResultDto', async() => {
-      expect(await searchService.search('query', FilterType.NONE, defaultOffset)).toBeInstanceOf(SearchResponseDto);
+      expect(await searchService.search('', 'query', FilterType.NONE, defaultOffset)).toBeInstanceOf(SearchResponseDto);
     });
 
     it('should request data with the given contraints', async() => {
@@ -40,7 +40,7 @@ describe('SearchService', () => {
       const filter = FilterType.FAVORITE;
       const offset = new Date('2023-03-04T00:00:00.000Z').toISOString();
       // when
-      await searchService.search('query', filter, offset);
+      await searchService.search('', 'query', filter, offset);
       // then
       expect(mockPlurkApiService.getTimelinePlurks).toBeCalledWith(filter, offset);
     });
@@ -55,7 +55,7 @@ describe('SearchService', () => {
         plurks: [latestPlurk, oldestPlurk],
       }));
       // when
-      let response = await searchService.search(query, FilterType.NONE, defaultOffset);
+      let response = await searchService.search('', query, FilterType.NONE, defaultOffset);
       // then
       expect(response.firstTimestamp).toStrictEqual(new Date('2023-03-04T00:00:00.000Z'));
       expect(response.firstTimestampStr).toBe('2023-03-04T00:00:00.000Z');
@@ -67,7 +67,7 @@ describe('SearchService', () => {
         plurks: [],
       }));
       // when
-      response = await searchService.search(query, FilterType.NONE, defaultOffset);
+      response = await searchService.search('', query, FilterType.NONE, defaultOffset);
       // then
       expect(response.firstTimestamp).toBeUndefined();
       expect(response.firstTimestampStr).toBeUndefined();
@@ -87,7 +87,7 @@ describe('SearchService', () => {
       });
       mockPlurkApiService.getTimelinePlurks.mockResolvedValue(plurkList);
       // when
-      const response = await searchService.search(query, FilterType.NONE, defaultOffset);
+      const response = await searchService.search('', query, FilterType.NONE, defaultOffset);
       // then
       expect(response.plurks.length).toBe(2);
       expect(response.counts).toBe(2);

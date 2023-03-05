@@ -1,6 +1,8 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { isNullish } from '../common/util';
+import { AuthDetail } from '../dto/authDetail.dto';
 import { FilterType } from '../dto/filter-type.enum';
 import type { PlurkDto } from '../dto/plurk.dto';
 import type { PlurksDto } from '../dto/plurks.dto';
@@ -13,11 +15,17 @@ export class SearchService {
 
   constructor(
     private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
     @Inject(forwardRef(() => PlurkApiService)) private readonly plurkApiService: PlurkApiService,
   ) {}
 
-  async search(query: string, filter: FilterType, offset: string | undefined): Promise<SearchResponseDto> {
-    const plurks = await this.plurkApiService.getTimelinePlurks(filter, offset);
+  async search(
+    token: string,
+    query: string,
+    filter: FilterType,
+    offset: string | undefined): Promise<SearchResponseDto> {
+    const credentials = this.verifyAndRetrieveCredentials(token);
+    const plurks = await this.plurkApiService.getTimelinePlurks(credentials, filter, offset);
     return this.filterPlurk(plurks, query, filter);
   }
 
@@ -74,6 +82,16 @@ export class SearchService {
       first = false;
     }
     response.next = nextLink;
+  }
+
+  private verifyAndRetrieveCredentials(token: string): AuthDetail {
+    this.jwtService.verify(token);
+    const payload: any = this.jwtService.decode(token);
+    this.logger.debug(`decoded payload: ${JSON.stringify(payload)}`);
+    return new AuthDetail({
+      token: payload.token,
+      secret: payload.secret,
+    });
   }
 
   static addPlurkToResponse(response: SearchResponseDto, plurk: PlurkDto) {
