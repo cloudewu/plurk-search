@@ -18,7 +18,7 @@ export class AuthService {
     const { token, secret, authPage } = await this.plurkApiService.getRequestToken();
     const response = new AuthResponseDto({
       authLink: authPage,
-      token: this.jwtService.sign({ token, secret }),
+      token: this.signCredentials(token, secret),
     });
     return response;
   }
