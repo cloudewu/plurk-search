@@ -99,6 +99,20 @@ describe('SearchService', () => {
       expect(response.plurks.length).toBe(2);
       expect(response.counts).toBe(2);
     });
+
+    it('should generate next link in response', async() => {
+      // given
+      const query = '';
+      const latestPlurk = new PlurkDto({ postTime: new Date('2023-03-04T00:00:00.000Z') });
+      const oldestPlurk = new PlurkDto({ postTime: new Date('2023-03-01T00:00:00.000Z') });
+      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
+        plurks: [latestPlurk, oldestPlurk],
+      }));
+      // when
+      const response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
+      // then
+      expect(response.next).toBeTruthy();
+    });
   });
 
   describe('addPlurkToResponse', () => {

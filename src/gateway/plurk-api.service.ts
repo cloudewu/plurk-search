@@ -38,17 +38,7 @@ export class PlurkApiService {
     return this.plurkSerializer.serialize(response);
   }
 
-  private setupAuth(auth: AuthDetail) {
-    this.plurkApi.token = auth.token ?? null;
-    this.plurkApi.tokenSecret = auth.secret ?? null;
-  }
-
-  private resetAuth() {
-    this.plurkApi.token = '';
-    this.plurkApi.tokenSecret = '';
-  }
-
-  private async sendRequest(auth: AuthDetail, url: string, params?: any) {
+  async sendRequest(auth: AuthDetail, url: string, params?: any) {
     let response = null;
     try {
       this.logRequst(url, params);
@@ -61,6 +51,16 @@ export class PlurkApiService {
       throw new HttpException('External server error', HttpStatus.BAD_GATEWAY);
     }
     return response;
+  }
+
+  private setupAuth(auth: AuthDetail) {
+    this.plurkApi.token = auth.token ?? null;
+    this.plurkApi.tokenSecret = auth.secret ?? null;
+  }
+
+  private resetAuth() {
+    this.plurkApi.token = '';
+    this.plurkApi.tokenSecret = '';
   }
 
   private logRequst(url: string, params?: Record<string, string>) {
