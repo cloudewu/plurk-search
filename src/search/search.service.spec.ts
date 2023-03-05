@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { FilterType } from '../dto/filter-type.enum';
 import { PlurkDto } from '../dto/plurk.dto';
@@ -11,13 +12,17 @@ import { SearchService } from './search.service';
 describe('SearchService', () => {
   let app: TestingModule;
   let searchService: SearchService;
+  let jwtService: JwtService;
   const mockPlurkApiService = {
     getTimelinePlurks: jest.fn(),
   };
   const defaultOffset = undefined;
+  const fakeCredential = { token: 'this is a token', secret: 'this is the secret' };
+  const fakeToken = 'eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6InRoaXMgaXMgYSB0b2tlbiIsInNlY3JldCI6InRoaXMgaXMgdGhlIHNlY3JldCJ9.6_eKBMnNeoDq486DhFml6VuDDRlIfFfdvF9Hqlkly68';
 
   beforeAll(async() => {
     app = await Test.createTestingModule({
+      imports: [JwtModule.register({ secret: 'test-secret' })],
       controllers: [SearchController],
       providers: [ConfigService, SearchService],
     }).useMocker(token => {
@@ -28,11 +33,13 @@ describe('SearchService', () => {
     }).compile();
 
     searchService = app.get(SearchService);
+    jwtService = app.get(JwtService);
+    jest.spyOn(jwtService, 'verify').mockImplementation((...args) => ({}));
   });
 
   describe('search', () => {
     it('should response SearchResultDto', async() => {
-      expect(await searchService.search('', 'query', FilterType.NONE, defaultOffset)).toBeInstanceOf(SearchResponseDto);
+      expect(await searchService.search(fakeToken, 'query', FilterType.NONE, defaultOffset)).toBeInstanceOf(SearchResponseDto);
     });
 
     it('should request data with the given contraints', async() => {
@@ -40,9 +47,9 @@ describe('SearchService', () => {
       const filter = FilterType.FAVORITE;
       const offset = new Date('2023-03-04T00:00:00.000Z').toISOString();
       // when
-      await searchService.search('', 'query', filter, offset);
+      await searchService.search(fakeToken, 'query', filter, offset);
       // then
-      expect(mockPlurkApiService.getTimelinePlurks).toBeCalledWith(filter, offset);
+      expect(mockPlurkApiService.getTimelinePlurks).toBeCalledWith(fakeCredential, filter, offset);
     });
 
     it('should add timestamp info in responses', async() => {
@@ -55,7 +62,7 @@ describe('SearchService', () => {
         plurks: [latestPlurk, oldestPlurk],
       }));
       // when
-      let response = await searchService.search('', query, FilterType.NONE, defaultOffset);
+      let response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
       // then
       expect(response.firstTimestamp).toStrictEqual(new Date('2023-03-04T00:00:00.000Z'));
       expect(response.firstTimestampStr).toBe('2023-03-04T00:00:00.000Z');
@@ -67,7 +74,7 @@ describe('SearchService', () => {
         plurks: [],
       }));
       // when
-      response = await searchService.search('', query, FilterType.NONE, defaultOffset);
+      response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
       // then
       expect(response.firstTimestamp).toBeUndefined();
       expect(response.firstTimestampStr).toBeUndefined();
@@ -87,7 +94,7 @@ describe('SearchService', () => {
       });
       mockPlurkApiService.getTimelinePlurks.mockResolvedValue(plurkList);
       // when
-      const response = await searchService.search('', query, FilterType.NONE, defaultOffset);
+      const response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
       // then
       expect(response.plurks.length).toBe(2);
       expect(response.counts).toBe(2);

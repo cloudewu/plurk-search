@@ -5,6 +5,8 @@ import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 
 describe('SearchController', () => {
+  const fakeToken = 'Fake token';
+
   let app: TestingModule;
 
   beforeAll(async() => {
@@ -26,10 +28,10 @@ describe('SearchController', () => {
       const offset = new Date('2023-03-04T00:00:00.000Z').toISOString();
       // when
       const controller = app.get(SearchController);
-      await controller.getSearch('', query, filter, offset);
+      await controller.getSearch(fakeToken, query, filter, offset);
       // then
       const service = app.get(SearchService);
-      expect(service.search).toHaveBeenCalledWith(query, filter, offset);
+      expect(service.search).toHaveBeenCalledWith(fakeToken, query, filter, offset);
     });
   });
 });
