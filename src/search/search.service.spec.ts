@@ -1,34 +1,134 @@
+import { ConfigService } from '@nestjs/config';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { PlurksDto } from '../broker/dto/plurks.dto';
-import { PlurkApiService } from '../broker/plurk-api.service';
-import { FilterType } from './dto/filter-type.enum';
-import { SearchService } from './search.service';
+import { FilterType } from '../dto/filter-type.enum';
+import { PlurkDto } from '../dto/plurk.dto';
+import { PlurksDto } from '../dto/plurks.dto';
+import { SearchResponseDto } from '../dto/searchResponse.dto';
+import { PlurkApiService } from '../gateway/plurk-api.service';
 import { SearchController } from './search.controller';
+import { SearchService } from './search.service';
 
 describe('SearchService', () => {
   let app: TestingModule;
   let searchService: SearchService;
+  let jwtService: JwtService;
+  const mockPlurkApiService = {
+    getTimelinePlurks: jest.fn(),
+  };
+  const defaultOffset = undefined;
+  const fakeCredential = { token: 'this is a token', secret: 'this is the secret' };
+  const fakeToken = 'eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6InRoaXMgaXMgYSB0b2tlbiIsInNlY3JldCI6InRoaXMgaXMgdGhlIHNlY3JldCJ9.6_eKBMnNeoDq486DhFml6VuDDRlIfFfdvF9Hqlkly68';
 
   beforeAll(async() => {
     app = await Test.createTestingModule({
+      imports: [JwtModule.register({ secret: 'test-secret' })],
       controllers: [SearchController],
-      providers: [SearchService],
+      providers: [ConfigService, SearchService],
     }).useMocker(token => {
       if (token === PlurkApiService) {
-        const response = new PlurksDto();
-        return { getTimelinePlurks: jest.fn().mockResolvedValue(response) };
+        mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto());
+        return mockPlurkApiService;
       }
     }).compile();
 
     searchService = app.get(SearchService);
+    jwtService = app.get(JwtService);
+    jest.spyOn(jwtService, 'verify').mockImplementation((...args) => ({}));
   });
 
   describe('search', () => {
-    it('should search for a given query', async() => {
-      const query = 'Search query';
-      const filter = FilterType.FAVORITE;
+    it('should response SearchResultDto', async() => {
+      expect(await searchService.search(fakeToken, 'query', FilterType.NONE, defaultOffset)).toBeInstanceOf(SearchResponseDto);
+    });
 
-      expect(await searchService.search(query, filter)).toBeInstanceOf(PlurksDto);
+    it('should request data with the given contraints', async() => {
+      // given
+      const filter = FilterType.FAVORITE;
+      const offset = new Date('2023-03-04T00:00:00.000Z').toISOString();
+      // when
+      await searchService.search(fakeToken, 'query', filter, offset);
+      // then
+      expect(mockPlurkApiService.getTimelinePlurks).toBeCalledWith(fakeCredential, filter, offset);
+    });
+
+    it('should add timestamp info in responses', async() => {
+      const query = 'SEARCH QUERY';
+      const latestPlurk = new PlurkDto({ postTime: new Date('2023-03-04T00:00:00.000Z') });
+      const oldestPlurk = new PlurkDto({ postTime: new Date('2023-03-01T00:00:00.000Z') });
+
+      // given
+      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
+        plurks: [latestPlurk, oldestPlurk],
+      }));
+      // when
+      let response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
+      // then
+      expect(response.firstTimestamp).toStrictEqual(new Date('2023-03-04T00:00:00.000Z'));
+      expect(response.firstTimestampStr).toBe('2023-03-04T00:00:00.000Z');
+      expect(response.lastTimestamp).toStrictEqual(new Date('2023-03-01T00:00:00.000Z'));
+      expect(response.lastTimestampStr).toBe('2023-03-01T00:00:00.000Z');
+
+      // given
+      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
+        plurks: [],
+      }));
+      // when
+      response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
+      // then
+      expect(response.firstTimestamp).toBeUndefined();
+      expect(response.firstTimestampStr).toBeUndefined();
+      expect(response.lastTimestamp).toBeUndefined();
+      expect(response.lastTimestampStr).toBeUndefined();
+    });
+
+    it('should filter results by queries', async() => {
+      // given
+      const query = 'SEARCH QUERY';
+      const plurkList = new PlurksDto({
+        plurks: [
+          { content: `A plurk that contains query ${query}.` },
+          { content: 'A plurk that does not contains query.' },
+          { content: `${query} A plurk that contains query.` },
+        ],
+      });
+      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(plurkList);
+      // when
+      const response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
+      // then
+      expect(response.plurks.length).toBe(2);
+      expect(response.counts).toBe(2);
+    });
+
+    it('should generate next link in response', async() => {
+      // given
+      const query = '';
+      const latestPlurk = new PlurkDto({ postTime: new Date('2023-03-04T00:00:00.000Z') });
+      const oldestPlurk = new PlurkDto({ postTime: new Date('2023-03-01T00:00:00.000Z') });
+      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
+        plurks: [latestPlurk, oldestPlurk],
+      }));
+      // when
+      const response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
+      // then
+      expect(response.next).toBeTruthy();
+    });
+  });
+
+  describe('addPlurkToResponse', () => {
+    it('should correctly push a plurk into response list and increase the count', () => {
+      // given
+      const plurk = new PlurkDto({ id: 1 });
+      const response = new SearchResponseDto({
+        plurks: [new PlurkDto({ id: 2 })],
+        counts: 1,
+      });
+      // when
+      SearchService.addPlurkToResponse(response, plurk);
+      // then
+      expect(response.counts).toBe(2);
+      expect(response.plurks.length).toBe(2);
+      expect(response.plurks.includes(plurk)).toBeTruthy();
     });
   });
 });

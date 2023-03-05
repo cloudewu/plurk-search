@@ -1,6 +1,8 @@
 import { Controller, DefaultValuePipe, Get, Logger, Query } from '@nestjs/common';
-import { ParseEnumPipe } from '../pipes/parse-enum.pipe';
-import { FilterType } from './dto/filter-type.enum';
+import { AuthToken } from '../common/authToken.decorator';
+import { FilterType } from '../dto/filter-type.enum';
+import type { SearchResponseDto } from '../dto/searchResponse.dto';
+import { ParseEnumPipe } from '../pipe/parse-enum.pipe';
 import { SearchService } from './search.service';
 
 @Controller('search')
@@ -10,10 +12,14 @@ export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
   @Get()
-  async getSearch(@Query('query') query: string,
-    @Query('filter', new ParseEnumPipe(FilterType), new DefaultValuePipe(FilterType.NONE)) filter: FilterType) {
-    this.logRequest('/search', { query, filter: FilterType[filter] });
-    return await this.searchService.search(query, filter);
+  async getSearch(
+    @AuthToken() token: string,
+      @Query('query') query: string,
+      @Query('filter', new ParseEnumPipe(FilterType), new DefaultValuePipe(FilterType.NONE)) filter: FilterType,
+      @Query('offset') offset: string | undefined,
+  ): Promise<SearchResponseDto> {
+    this.logRequest('/search', { token, query, filter: FilterType[filter], offset });
+    return await this.searchService.search(token, query, filter, offset);
   }
 
   private logRequest(endpoint: string, params: any) {
