@@ -26,7 +26,7 @@ describe('SearchController', () => {
       const offset = new Date('2023-03-04T00:00:00.000Z').toISOString();
       // when
       const controller = app.get(SearchController);
-      await controller.getSearch(query, filter, offset, '');
+      await controller.getSearch('', query, filter, offset);
       // then
       const service = app.get(SearchService);
       expect(service.search).toHaveBeenCalledWith(query, filter, offset);
