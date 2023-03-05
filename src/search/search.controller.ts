@@ -1,5 +1,5 @@
 import { Controller, DefaultValuePipe, Get, Logger, Query } from '@nestjs/common';
-import { Auth } from '../common/auth.decorator';
+import { AuthToken } from '../common/auth.decorator';
 import { FilterType } from '../dto/filter-type.enum';
 import type { SearchResponseDto } from '../dto/searchResponse.dto';
 import { ParseEnumPipe } from '../pipe/parse-enum.pipe';
@@ -13,7 +13,7 @@ export class SearchController {
 
   @Get()
   async getSearch(
-    @Auth() token: string,
+    @AuthToken() token: string,
       @Query('query') query: string,
       @Query('filter', new ParseEnumPipe(FilterType), new DefaultValuePipe(FilterType.NONE)) filter: FilterType,
       @Query('offset') offset: string | undefined,

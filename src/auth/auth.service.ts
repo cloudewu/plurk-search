@@ -2,7 +2,6 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { isNullish } from '../common/util';
 import { AuthDetail } from '../dto/authDetail.dto';
-import type { AuthRequestDto } from '../dto/authRequest.dto';
 import { AuthResponseDto } from '../dto/authResponse.dto';
 import { PlurkApiService } from '../gateway/plurk-api.service';
 
@@ -24,13 +23,17 @@ export class AuthService {
     return response;
   }
 
-  async authenticate(request: AuthRequestDto): Promise<string> {
-    const auth: AuthDetail = this.verifyAndDecodeCredentials(request.token);
-    if (isNullish(request.code)) {
+  async authenticate(requestToken: string, code: string): Promise<string> {
+    const auth: AuthDetail = this.verifyAndDecodeCredentials(requestToken);
+    if (isNullish(code)) {
       AuthService.raiseBadRequest('Invalid Verifier');
     }
 
-    const { token, secret } = await this.plurkApiService.authenticate(auth, request.code);
+    const { token, secret } = await this.plurkApiService.authenticate(auth, code);
+    return this.signCredentials(token, secret);
+  }
+
+  signCredentials(token: string, secret: string): string {
     return this.jwtService.sign({ token, secret });
   }
 
