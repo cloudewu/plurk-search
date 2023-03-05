@@ -3,7 +3,7 @@
 import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
 import * as httpMock from 'node-mocks-http';
-import { AuthToken } from './auth.decorator';
+import { AuthToken } from './authToken.decorator';
 
 describe('AuthToken', () => {
   function getParamDecoratorFactory(decorator: any) {

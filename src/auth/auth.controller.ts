@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { AuthToken } from '../common/auth.decorator';
+import { AuthToken } from '../common/authToken.decorator';
 import type { AuthResponseDto } from '../dto/authResponse.dto';
 import { AuthService } from './auth.service';
 

@@ -1,5 +1,5 @@
 import { Controller, DefaultValuePipe, Get, Logger, Query } from '@nestjs/common';
-import { AuthToken } from '../common/auth.decorator';
+import { AuthToken } from '../common/authToken.decorator';
 import { FilterType } from '../dto/filter-type.enum';
 import type { SearchResponseDto } from '../dto/searchResponse.dto';
 import { ParseEnumPipe } from '../pipe/parse-enum.pipe';
