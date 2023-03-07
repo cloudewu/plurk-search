@@ -1,6 +1,6 @@
 // Kudos: https://code.pieces.app/blog/using-encryption-and-hashing-to-increase-security-in-nestjs
 
-import { BadRequestException, Injectable, Logger, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 
@@ -40,8 +40,8 @@ export class CryptoService {
       const result = Buffer.concat([decipher.update(cipher), decipher.final()]);
       return result.toString();
     } catch (err: any) {
-      this.logger.error(`Failed to decrypt data ${data}`, err.static, err.message);
-      throw new BadRequestException(err.message);
+      this.logger.error(`Failed to decrypt data: ${data}`, err.stack, err.message);
+      throw new UnprocessableEntityException(err.message);
     }
   }
 
