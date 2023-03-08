@@ -589,6 +589,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@golevelup/ts-jest@npm:^0.3.5":
+  version: 0.3.5
+  resolution: "@golevelup/ts-jest@npm:0.3.5"
+  checksum: 3bb6460773326153217880910026ff6ec8ae4544e551e2c1da87af3f24c050d8aedc6a72ba5f57867088a2581e2598788effb4c447ec61d053529c0b45d44277
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.8":
   version: 0.11.8
   resolution: "@humanwhocodes/config-array@npm:0.11.8"
@@ -6413,6 +6420,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "plurk-search@workspace:."
   dependencies:
+    "@golevelup/ts-jest": ^0.3.5
     "@nestjs/cli": ^9.0.0
     "@nestjs/common": ^9.0.0
     "@nestjs/config": ^2.3.1
