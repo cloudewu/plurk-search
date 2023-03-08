@@ -1,80 +1,105 @@
+import { createMock, type DeepMocked } from '@golevelup/ts-jest';
+import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { AuthService } from '../auth/auth.service';
+import type { AuthDetail } from '../dto/authDetail.dto';
 import { FilterType } from '../dto/filter-type.enum';
 import { PlurkDto } from '../dto/plurk.dto';
 import { PlurksDto } from '../dto/plurks.dto';
 import { SearchResponseDto } from '../dto/searchResponse.dto';
 import { PlurkApiService } from '../gateway/plurk-api.service';
-import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 
 describe('SearchService', () => {
-  let app: TestingModule;
   let searchService: SearchService;
-  let jwtService: JwtService;
-  const mockPlurkApiService = {
-    getTimelinePlurks: jest.fn(),
-  };
-  const defaultOffset = undefined;
-  const fakeCredential = { token: 'this is a token', secret: 'this is the secret' };
-  const fakeToken = 'eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6InRoaXMgaXMgYSB0b2tlbiIsInNlY3JldCI6InRoaXMgaXMgdGhlIHNlY3JldCJ9.6_eKBMnNeoDq486DhFml6VuDDRlIfFfdvF9Hqlkly68';
+  let authService: DeepMocked<AuthService>;
+  let configService: DeepMocked<ConfigService>;
+  let plurkApiService: DeepMocked<PlurkApiService>;
+
+  const query = 'Search Query';
+  const noOffset = undefined;
+  const noFilter = FilterType.NONE;
+  const token = 'This is a token';
+  const credentials: AuthDetail = { token: 'this is a token', secret: 'this is the secret' };
 
   beforeAll(async() => {
-    app = await Test.createTestingModule({
-      imports: [JwtModule.register({ secret: 'test-secret' })],
-      controllers: [SearchController],
-      providers: [ConfigService, SearchService],
-    }).useMocker(token => {
-      if (token === PlurkApiService) {
-        mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto());
-        return mockPlurkApiService;
-      }
-    }).compile();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [SearchService],
+    }).useMocker(createMock)
+      .compile();
 
-    searchService = app.get(SearchService);
-    jwtService = app.get(JwtService);
-    jest.spyOn(jwtService, 'verify').mockImplementation((...args) => ({}));
+    searchService = module.get(SearchService);
+    authService = module.get(AuthService);
+    configService = module.get(ConfigService);
+    plurkApiService = module.get(PlurkApiService);
+  });
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    configService.get.mockReturnValue('value');
   });
 
   describe('search', () => {
+    beforeEach(() => {
+      plurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto());
+    });
+
     it('should response SearchResultDto', async() => {
-      expect(await searchService.search(fakeToken, 'query', FilterType.NONE, defaultOffset)).toBeInstanceOf(SearchResponseDto);
+      await expect(searchService.search(token, query, noFilter, noOffset)).resolves
+        .toBeInstanceOf(SearchResponseDto);
+    });
+
+    it('should verify token', async() => {
+      await searchService.search(token, query, noFilter, noOffset);
+      expect(authService.decryptAndVerify).toBeCalled();
+    });
+
+    it('should do nothing with invalid token', () => {
+      authService.decryptAndVerify.mockImplementationOnce(token => { throw new BadRequestException(); });
+      expect(plurkApiService.getTimelinePlurks).not.toBeCalled();
     });
 
     it('should request data with the given contraints', async() => {
       // given
       const filter = FilterType.FAVORITE;
       const offset = new Date('2023-03-04T00:00:00.000Z').toISOString();
+      authService.decryptAndVerify.mockReturnValueOnce(credentials);
       // when
-      await searchService.search(fakeToken, 'query', filter, offset);
+      await searchService.search(token, query, filter, offset);
       // then
-      expect(mockPlurkApiService.getTimelinePlurks).toBeCalledWith(fakeCredential, filter, offset);
+      expect(plurkApiService.getTimelinePlurks).toBeCalledWith(credentials, filter, offset);
     });
 
     it('should add timestamp info in responses', async() => {
-      const query = 'SEARCH QUERY';
-      const latestPlurk = new PlurkDto({ postTime: new Date('2023-03-04T00:00:00.000Z') });
-      const oldestPlurk = new PlurkDto({ postTime: new Date('2023-03-01T00:00:00.000Z') });
-
       // given
-      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
+      const newestTimeStamp = '2023-03-04T00:00:00.000Z';
+      const oldestTimeStamp = '2023-03-01T00:00:00.000Z';
+      const latestPlurk = new PlurkDto({ postTime: new Date(newestTimeStamp) });
+      const oldestPlurk = new PlurkDto({ postTime: new Date(oldestTimeStamp) });
+
+      plurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
         plurks: [latestPlurk, oldestPlurk],
       }));
+
       // when
-      let response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
+      let response = await searchService.search(token, query, noFilter, noOffset);
+
       // then
-      expect(response.firstTimestamp).toStrictEqual(new Date('2023-03-04T00:00:00.000Z'));
-      expect(response.firstTimestampStr).toBe('2023-03-04T00:00:00.000Z');
-      expect(response.lastTimestamp).toStrictEqual(new Date('2023-03-01T00:00:00.000Z'));
-      expect(response.lastTimestampStr).toBe('2023-03-01T00:00:00.000Z');
+      expect(response.firstTimestamp).toStrictEqual(new Date(newestTimeStamp));
+      expect(response.firstTimestampStr).toBe(newestTimeStamp);
+      expect(response.lastTimestamp).toStrictEqual(new Date(oldestTimeStamp));
+      expect(response.lastTimestampStr).toBe(oldestTimeStamp);
+
 
       // given
-      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
+      plurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
         plurks: [],
       }));
+
       // when
-      response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
+      response = await searchService.search(token, query, noFilter, noOffset);
+
       // then
       expect(response.firstTimestamp).toBeUndefined();
       expect(response.firstTimestampStr).toBeUndefined();
@@ -84,34 +109,38 @@ describe('SearchService', () => {
 
     it('should filter results by queries', async() => {
       // given
-      const query = 'SEARCH QUERY';
       const plurkList = new PlurksDto({
         plurks: [
-          { content: `A plurk that contains query ${query}.` },
-          { content: 'A plurk that does not contains query.' },
-          { content: `${query} A plurk that contains query.` },
+          { content: `A plurk that contains query ${query}.` }, // pass
+          { content: 'A plurk that does not contains query.' }, // filtered
+          { content: `${query} A plurk that contains query.` }, // pass
         ],
       });
-      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(plurkList);
+      plurkApiService.getTimelinePlurks.mockResolvedValue(plurkList);
       // when
-      const response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
+      const response = await searchService.search(token, query, noFilter, noOffset);
       // then
-      expect(response.plurks.length).toBe(2);
+      expect(response.plurks).toHaveLength(2);
       expect(response.counts).toBe(2);
     });
 
     it('should generate next link in response', async() => {
       // given
-      const query = '';
-      const latestPlurk = new PlurkDto({ postTime: new Date('2023-03-04T00:00:00.000Z') });
-      const oldestPlurk = new PlurkDto({ postTime: new Date('2023-03-01T00:00:00.000Z') });
-      mockPlurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
+      const newestTimeStamp = '2023-03-04T00:00:00.000Z';
+      const oldestTimeStamp = '2023-03-01T00:00:00.000Z';
+      const latestPlurk = new PlurkDto({ postTime: new Date(newestTimeStamp) });
+      const oldestPlurk = new PlurkDto({ postTime: new Date(oldestTimeStamp) });
+      plurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
         plurks: [latestPlurk, oldestPlurk],
       }));
       // when
-      const response = await searchService.search(fakeToken, query, FilterType.NONE, defaultOffset);
+      const filter = FilterType.FAVORITE;
+      const response = await searchService.search(token, query, filter, noOffset);
       // then
-      expect(response.next).toBeTruthy();
+      expect(response.next).toBeDefined();
+      expect(response.next).toContain(`offset=${oldestTimeStamp}`);
+      expect(response.next).toContain(`query=${query}`);
+      expect(response.next).toContain(`filter=${FilterType[filter]}`);
     });
   });
 
@@ -127,8 +156,8 @@ describe('SearchService', () => {
       SearchService.addPlurkToResponse(response, plurk);
       // then
       expect(response.counts).toBe(2);
-      expect(response.plurks.length).toBe(2);
-      expect(response.plurks.includes(plurk)).toBeTruthy();
+      expect(response.plurks).toHaveLength(2);
+      expect(response.plurks).toContain(plurk);
     });
   });
 });

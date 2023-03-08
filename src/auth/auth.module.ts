@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PlurkApiModule } from '../gateway/plurk-api.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { CryptoService } from './crypto.service';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthService } from './auth.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, CryptoService],
+  exports: [AuthService],
 })
 export class AuthModule { }

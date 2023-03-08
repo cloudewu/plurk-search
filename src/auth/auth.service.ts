@@ -4,12 +4,14 @@ import { isNullish } from '../common/util';
 import { AuthDetail } from '../dto/authDetail.dto';
 import { AuthResponseDto } from '../dto/authResponse.dto';
 import { PlurkApiService } from '../gateway/plurk-api.service';
+import { CryptoService } from './crypto.service';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
+    private readonly cryptoService: CryptoService,
     private readonly jwtService: JwtService,
     private readonly plurkApiService: PlurkApiService,
   ) {}
@@ -18,32 +20,34 @@ export class AuthService {
     const { token, secret, authPage } = await this.plurkApiService.getRequestToken();
     const response = new AuthResponseDto({
       authLink: authPage,
-      token: this.signCredentials(token, secret),
+      token: this.signAndEncrypt(token, secret),
     });
     return response;
   }
 
   async authenticate(requestToken: string, code: string): Promise<string> {
-    const auth: AuthDetail = this.verifyAndDecodeCredentials(requestToken);
+    const auth: AuthDetail = this.decryptAndVerify(requestToken);
     if (isNullish(code)) {
       AuthService.raiseBadRequest('Invalid Verifier');
     }
 
     const { token, secret } = await this.plurkApiService.authenticate(auth, code);
-    return this.signCredentials(token, secret);
+    return this.signAndEncrypt(token, secret);
   }
 
-  signCredentials(token: string, secret: string): string {
-    return this.jwtService.sign({ token, secret });
+  signAndEncrypt(token: string, secret: string): string {
+    const signedMessage = this.jwtService.sign({ token, secret });
+    return this.cryptoService.encrypt(signedMessage);
   }
 
-  verifyAndDecodeCredentials(token: string): AuthDetail {
+  decryptAndVerify(token: string): AuthDetail {
     if (isNullish(token)) {
       AuthService.raiseBadRequest('Invalid Token');
     }
 
-    this.verifyToken(token);
-    const decodedPayload: any = this.jwtService.decode(token);
+    const decryptedToken = this.cryptoService.decrypt(token);
+    this.verifyToken(decryptedToken);
+    const decodedPayload: any = this.jwtService.decode(decryptedToken);
     return new AuthDetail({ ...decodedPayload });
   }
 
@@ -52,7 +56,7 @@ export class AuthService {
       this.logger.log(`verifying token: ${token}`);
       this.jwtService.verify(token);
     } catch (err: any) {
-      this.logger.error('token verification failed');
+      this.logger.error('token verification failed', err.stack, err.message);
       AuthService.raiseBadRequest('Invalid Token');
     }
   }

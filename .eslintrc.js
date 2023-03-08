@@ -23,6 +23,14 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/semi': ['error', 'always'],
     '@typescript-eslint/space-before-function-paren': ['error', 'never'],
-    '@typescript-eslint/comma-dangle': ['error', 'always-multiline']
+    '@typescript-eslint/comma-dangle': ['error', 'always-multiline'],
   },
+  overrides: [
+    {
+      files: ['**/*.spec.ts'],
+      rules: {
+        'no-multiple-empty-lines': ['error', { 'max': 3 }],
+      },
+    },
+  ],
 };
