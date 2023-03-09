@@ -9,7 +9,10 @@ import { PlurksSerializer } from './plurks.serializer';
 
 @Injectable()
 export class PlurkApiService {
-  plurkApi: PlurkClient;
+  static readonly RESPONSE_PLURK_COUNT: number = 10;
+
+  readonly plurkApi: PlurkClient;
+
   private readonly logger = new Logger(PlurkApiService.name);
 
   constructor(
@@ -54,7 +57,7 @@ export class PlurkApiService {
 
   async getTimelinePlurks(auth: AuthDetail, filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
     const params: any = {
-      limit: 10,
+      limit: PlurkApiService.RESPONSE_PLURK_COUNT,
       minimal_data: true,
       minimal_user: true,
     };
