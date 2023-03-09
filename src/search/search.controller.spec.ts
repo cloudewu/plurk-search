@@ -6,15 +6,18 @@ import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 
 describe('SearchController', () => {
-  let app: TestingModule;
+  let controller: SearchController;
+  let service: DeepMocked<SearchService>;
 
   beforeAll(async() => {
-    app = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [SearchController],
     }).useMocker(createMock)
       .compile();
 
-    const service: DeepMocked<SearchService> = app.get(SearchService);
+    controller = module.get(SearchController);
+    service = module.get(SearchService);
+
     service.search.mockResolvedValue(new SearchResponseDto());
   });
 
@@ -25,11 +28,11 @@ describe('SearchController', () => {
       const query = 'Search query';
       const filter = FilterType.MY;
       const offset = new Date('2023-03-04T00:00:00.000Z').toISOString();
+
       // when
-      const controller = app.get(SearchController);
       await controller.getSearch(token, query, filter, offset);
+
       // then
-      const service = app.get(SearchService);
       expect(service.search).toHaveBeenCalledWith(token, query, filter, offset);
     });
   });
