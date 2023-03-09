@@ -2,17 +2,17 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { SysinfoController } from './sysinfo.controller';
 
 describe('SysinfoController', () => {
-  let app: TestingModule;
+  let module: TestingModule;
 
   beforeAll(async() => {
-    app = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       controllers: [SysinfoController],
     }).compile();
   });
 
   describe('sysinfo', () => {
     it('should return "ok"', () => {
-      const controller = app.get(SysinfoController);
+      const controller = module.get(SysinfoController);
       expect(controller.getSysinfo()).toBe('ok');
     });
   });
