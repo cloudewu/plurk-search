@@ -22,6 +22,20 @@ describe('SearchController', () => {
   });
 
   describe('getSearch', () => {
+    it('should return SearchResponse', async() => {
+      // given
+      const token = 'This is a token';
+      const query = 'Search query';
+      const filter = FilterType.MY;
+      const offset = new Date('2023-03-04T00:00:00.000Z').toISOString();
+
+      // when
+      const ret = await controller.getSearch(token, query, filter, offset);
+
+      // then
+      expect(ret).toBeInstanceOf(SearchResponseDto);
+    });
+
     it('should accept available parameters', async() => {
       // given
       const token = 'This is a token';
