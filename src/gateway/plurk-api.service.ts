@@ -87,12 +87,12 @@ export class PlurkApiService {
     return response;
   }
 
-  private setupAuth(auth: AuthDetail) {
+  setupAuth(auth: AuthDetail) {
     this.plurkApi.token = auth.token ?? null;
     this.plurkApi.tokenSecret = auth.secret ?? null;
   }
 
-  private resetAuth() {
+  resetAuth() {
     this.plurkApi.token = '';
     this.plurkApi.tokenSecret = '';
   }
