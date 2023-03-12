@@ -1,103 +1,152 @@
+import { createMock, type DeepMocked } from '@golevelup/ts-jest';
+import { BadGatewayException, BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { PlurkClient } from 'plurk2';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { PlurkClient } from 'plurk2';
+import { AuthDetail } from '../dto/authDetail.dto';
 import { FilterType } from '../dto/filter-type.enum';
 import { mockApiResponse } from './constants';
 import { PlurkApiService } from './plurk-api.service';
 import { PlurksSerializer } from './plurks.serializer';
 
 describe('PlurkApiService', () => {
+  let configService: DeepMocked<ConfigService>;
+  let plurkApiService: PlurkApiService;
+  let plurkApi: PlurkClient;
+
   const mockAuth = { token: 'this is a token', secret: 'this is the secret' };
   const empty = '';
 
-  let configService: ConfigService;
-  let serializer: PlurksSerializer;
-  let plurkApi: PlurkClient;
-  let plurkApiService: PlurkApiService;
-
   beforeAll(async() => {
-    configService = new ConfigService();
-    serializer = new PlurksSerializer();
-    jest.spyOn(configService, 'getOrThrow').mockImplementation((...args) => empty);
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [PlurkApiService, PlurksSerializer],
+    }).useMocker(createMock)
+      .compile();
 
-    plurkApiService = new PlurkApiService(configService, serializer);
+    configService = module.get(ConfigService);
+    plurkApiService = module.get(PlurkApiService);
     plurkApi = plurkApiService.plurkApi;
+
+    configService.getOrThrow.mockReturnValue(empty);
+    jest.spyOn(plurkApi, 'request').mockResolvedValue(mockApiResponse);
+    jest.spyOn(plurkApi, 'getRequestToken')
+      .mockResolvedValue(new PlurkClient('request token', 'request secret', 'access token', 'access secret'));
+    jest.spyOn(plurkApi, 'getAccessToken')
+      .mockResolvedValue(new PlurkClient('request token', 'request secret', 'access token', 'access secret'));
   });
 
-  beforeEach(async() => {
-    jest.spyOn(plurkApi, 'request').mockResolvedValue(mockApiResponse);
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('getRequestToken', () => {
+    it('should get auth info from Plurk App', async() => {
+      // when
+      const ret = await plurkApiService.getRequestToken();
+      // then
+      expect(ret.token).toBeDefined();
+      expect(ret.token.length).toBeGreaterThan(0);
+      expect(ret.secret).toBeDefined();
+      expect(ret.secret.length).toBeGreaterThan(0);
+      expect(ret.authPage).toBeDefined();
+      expect(ret.authPage.length).toBeGreaterThan(0);
+    });
+
+    it('should capture failures', async() => {
+      jest.spyOn(plurkApi, 'getRequestToken').mockImplementationOnce(() => {
+        throw new HttpException('error', HttpStatus.INTERNAL_SERVER_ERROR);
+      });
+      await expect(plurkApiService.getRequestToken()).rejects.toThrow(BadGatewayException);
+    });
+
+    it('must reset authentication details before and after each request', async() => {
+      jest.spyOn(plurkApiService, 'resetAuth');
+      await plurkApiService.getRequestToken();
+      expect(plurkApiService.resetAuth).toBeCalledTimes(2);
+    });
+  });
+
+  describe('authenticate', () => {
+    const auth = new AuthDetail({ token: 'This is a token', secret: 'This is the secret' });
+    const code = '1234';
+
+    it('should get access token from Plurk App with given auth info', async() => {
+      // given
+      jest.spyOn(plurkApiService, 'setupAuth');
+      // when
+      const ret = await plurkApiService.authenticate(auth, code);
+      // then
+      expect(plurkApiService.setupAuth).toHaveBeenCalledWith(auth);
+      expect(plurkApi.getAccessToken).toHaveBeenCalledWith(code);
+      expect(ret).toBeInstanceOf(AuthDetail);
+      expect(ret.token).toBeDefined();
+      expect(ret.token.length).toBeGreaterThan(0);
+      expect(ret.secret).toBeDefined();
+      expect(ret.secret.length).toBeGreaterThan(0);
+    });
+
+    it('should capture failures', async() => {
+      // given
+      jest.spyOn(plurkApi, 'getAccessToken').mockImplementationOnce(() => {
+        throw new HttpException('error', HttpStatus.INTERNAL_SERVER_ERROR);
+      });
+      // then
+      await expect(plurkApiService.authenticate(auth, code)).rejects.toThrow(BadRequestException);
+    });
+
+    it('must reset authentication details after each request', async() => {
+      // given
+      jest.spyOn(plurkApiService, 'setupAuth');
+      // when
+      await plurkApiService.authenticate(auth, code);
+      // then
+      expect(plurkApiService.resetAuth).toHaveBeenCalled();
+    });
   });
 
   describe('getTimelinePlurks', () => {
-    it('should call /Timeline/getPlurks with given properties', async() => {
-      // given
-      const url = '/Timeline/getPlurks';
-      const filter = FilterType.NONE;
-      let offset;
+    const requestUrl = '/Timeline/getPlurks';
+    const noFilter = FilterType.NONE;
+    const noOffset = undefined;
+    const defaultParams = {
+      limit: PlurkApiService.RESPONSE_PLURK_COUNT,
+      minimal_data: true,
+      minimal_user: true,
+    };
+
+    beforeEach(() => {
       jest.spyOn(plurkApiService, 'sendRequest');
-
-      // when
-      await plurkApiService.getTimelinePlurks(mockAuth, filter, offset);
-
-      // then
-      const params = {
-        limit: 10,
-        minimal_data: true,
-        minimal_user: true,
-      };
-      expect(plurkApiService.sendRequest).toBeCalledWith(mockAuth, url, params);
-
-      // cleanup
-      jest.clearAllMocks();
     });
 
-    it('should send request with offset if given', async() => {
-      const url = '/Timeline/getPlurks';
+    it('should call /Timeline/getPlurks with default properties', async() => {
+      await plurkApiService.getTimelinePlurks(mockAuth, noFilter, noOffset);
+      expect(plurkApiService.sendRequest).toBeCalledWith(mockAuth, requestUrl, defaultParams);
+    });
+
+    it('should send request with filter if given', async() => {
       // given
       const filter = FilterType.FAVORITE;
-      let offset;
-      jest.spyOn(plurkApiService, 'sendRequest');
-
       // when
-      await plurkApiService.getTimelinePlurks(mockAuth, filter, offset);
-
+      await plurkApiService.getTimelinePlurks(mockAuth, filter, noOffset);
       // then
       const params = {
-        // fixed
-        limit: 10,
-        minimal_data: true,
-        minimal_user: true,
-        // given
+        ...defaultParams,
         filter: 'favorite',
       };
-      expect(plurkApiService.sendRequest).toBeCalledWith(mockAuth, url, params);
-
-      // cleanup
-      jest.clearAllMocks();
+      expect(plurkApiService.sendRequest).toBeCalledWith(mockAuth, requestUrl, params);
     });
 
-    it('should request with filter if given', async() => {
+    it('should request with offset if given', async() => {
       // given
-      const url = '/Timeline/getPlurks';
-      const filter = FilterType.NONE;
       const offset = '2023-03-05T00:00:00.000Z';
-      jest.spyOn(plurkApiService, 'sendRequest');
-
       // when
-      await plurkApiService.getTimelinePlurks(mockAuth, filter, offset);
-
+      await plurkApiService.getTimelinePlurks(mockAuth, noFilter, offset);
       // then
       const params = {
-        // fixed
-        limit: 10,
-        minimal_data: true,
-        minimal_user: true,
-        // given
+        ...defaultParams,
         offset,
       };
-      expect(plurkApiService.sendRequest).toBeCalledWith(mockAuth, url, params);
-
-      // cleanup
-      jest.clearAllMocks();
+      expect(plurkApiService.sendRequest).toBeCalledWith(mockAuth, requestUrl, params);
     });
   });
 
@@ -105,12 +154,46 @@ describe('PlurkApiService', () => {
     it('should reset auth after each request', async() => {
       // given
       const url = '/App/Users/me';
+      const params = {};
       // when
-      await plurkApiService.sendRequest(mockAuth, url, {});
+      await plurkApiService.sendRequest(mockAuth, url, params);
       // then
-      expect(plurkApi.request).toHaveBeenCalled();
+      expect(plurkApi.request).toHaveBeenCalledWith(url, params);
       expect(plurkApi.token).toBe(empty);
       expect(plurkApi.tokenSecret).toBe(empty);
+    });
+  });
+
+  describe('setupAuth', () => {
+    it('should setup plurkApi with given auth details', () => {
+      // given
+      plurkApi.token = '';
+      plurkApi.tokenSecret = '';
+      const auth = new AuthDetail({ token: 'This is a token', secret: 'This is the secret' });
+      // when
+      plurkApiService.setupAuth(auth);
+      // then
+      expect(plurkApi.token).toBe(auth.token);
+      expect(plurkApi.tokenSecret).toBe(auth.secret);
+    });
+
+    it('should not fail with empty auth', () => {
+      const auth = new AuthDetail();
+      // when
+      expect(() => { plurkApiService.setupAuth(auth); }).not.toThrowError();
+    });
+  });
+
+  describe('resetAuth', () => {
+    it('should reset auth information', () => {
+      // given
+      plurkApi.token = 'This is a token';
+      plurkApi.tokenSecret = 'This is the secret';
+      // when
+      plurkApiService.resetAuth();
+      // then
+      expect(plurkApi.token).toBe('');
+      expect(plurkApi.tokenSecret).toBe('');
     });
   });
 });

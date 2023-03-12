@@ -1,3 +1,4 @@
+import { createMock, type DeepMocked } from '@golevelup/ts-jest';
 import { BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
@@ -9,34 +10,33 @@ import { AuthService } from './auth.service';
 import { CryptoService } from './crypto.service';
 
 describe('AuthService', () => {
-  let app: TestingModule;
   let authService: AuthService;
   let cryptoService: CryptoService;
   let jwtService: JwtService;
-
-  const mockPlurkApiService = {
-    getRequestToken: jest.fn(),
-    authenticate: jest.fn(),
-  };
+  let plurkApiService: DeepMocked<PlurkApiService>;
 
   beforeAll(async() => {
-    app = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       imports: [JwtModule.register({ secret: 'test-secret' })],
       providers: [AuthService, CryptoService],
     }).useMocker(token => {
-      if (token === PlurkApiService) {
-        return mockPlurkApiService;
-      }
       if (token === ConfigService) {
-        const configService = new ConfigService();
-        jest.spyOn(configService, 'getOrThrow').mockImplementation((...args) => 'env variable');
+        // should explicitly mock the return value for CryptoService construction
+        const configService = createMock<ConfigService>();
+        configService.getOrThrow.mockReturnValue('env variable');
         return configService;
       }
+      return createMock(token);
     }).compile();
 
-    authService = app.get(AuthService);
-    cryptoService = app.get(CryptoService);
-    jwtService = app.get(JwtService);
+    authService = module.get(AuthService);
+    cryptoService = module.get(CryptoService);
+    jwtService = module.get(JwtService);
+    plurkApiService = module.get(PlurkApiService);
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   describe('getAuthenticationLink', () => {
@@ -45,9 +45,7 @@ describe('AuthService', () => {
       const token = 'this is a token';
       const secret = 'this is the secret';
       const authPage = 'https://auth.page';
-      mockPlurkApiService.getRequestToken.mockResolvedValue({
-        token, secret, authPage,
-      });
+      plurkApiService.getRequestToken.mockResolvedValueOnce({ token, secret, authPage });
       jest.spyOn(authService, 'signAndEncrypt');
       // when
       const response = await authService.getAuthenticationLink();
@@ -55,9 +53,6 @@ describe('AuthService', () => {
       expect(response).toBeInstanceOf(AuthResponseDto);
       expect(response.authLink).toBe(authPage);
       expect(authService.signAndEncrypt).toBeCalledWith(token, secret);
-
-      // cleanup
-      jest.restoreAllMocks();
     });
   });
 
@@ -75,16 +70,13 @@ describe('AuthService', () => {
       const code = '1234';
 
       jest.spyOn(authService, 'decryptAndVerify').mockImplementationOnce((...args) => auth);
-      mockPlurkApiService.authenticate.mockImplementationOnce((...args) => ({ token: accessToken, secret: accessSecret }));
+      plurkApiService.authenticate.mockResolvedValueOnce({ token: accessToken, secret: accessSecret });
       jest.spyOn(authService, 'signAndEncrypt').mockImplementationOnce((...args) => encryptedToken);
       // when
       const response = await authService.authenticate(requestToken, code);
       // then
-      expect(mockPlurkApiService.authenticate).toHaveBeenCalledWith(auth, code);
+      expect(plurkApiService.authenticate).toHaveBeenCalledWith(auth, code);
       expect(response).toBe(encryptedToken);
-
-      // cleanup
-      jest.restoreAllMocks();
     });
 
     it('should reject invalid token', async() => {
@@ -92,21 +84,17 @@ describe('AuthService', () => {
       await expect(callWithArgs(null, code)).rejects.toThrow(BadRequestException);
       await expect(callWithArgs(undefined, code)).rejects.toThrow(BadRequestException);
       await expect(callWithArgs('invalid token', code)).rejects.toThrow(UnprocessableEntityException);
-      jest.spyOn(cryptoService, 'decrypt').mockImplementation((...args) => 'decrypted token');
+      jest.spyOn(cryptoService, 'decrypt').mockImplementationOnce((...args) => 'decrypted token');
       await expect(callWithArgs('invalid token', code)).rejects.toThrow(BadRequestException);
-
-      // cleanup
-      jest.restoreAllMocks();
     });
 
     it('should reject empty code', async() => {
       const token = 'This is a token';
-      jest.spyOn(authService, 'decryptAndVerify').mockImplementation((...args) => new AuthDetail());
+      jest.spyOn(authService, 'decryptAndVerify').mockImplementationOnce((...args) => new AuthDetail());
       await expect(callWithArgs(token, undefined)).rejects.toThrow(BadRequestException);
-      await expect(callWithArgs(token, null)).rejects.toThrow(BadRequestException);
 
-      // cleanup
-      jest.restoreAllMocks();
+      jest.spyOn(authService, 'decryptAndVerify').mockImplementationOnce((...args) => new AuthDetail());
+      await expect(callWithArgs(token, null)).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -123,9 +111,6 @@ describe('AuthService', () => {
       expect(response).not.toBeNull();
       expect(jwtService.sign).toBeCalledTimes(1);
       expect(cryptoService.encrypt).toBeCalledTimes(1);
-
-      // cleanup
-      jest.restoreAllMocks();
     });
   });
 

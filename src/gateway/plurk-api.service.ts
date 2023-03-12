@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PlurkClient } from 'plurk2';
 import { isNullish } from '../common/util';
@@ -9,7 +9,10 @@ import { PlurksSerializer } from './plurks.serializer';
 
 @Injectable()
 export class PlurkApiService {
-  plurkApi: PlurkClient;
+  static readonly RESPONSE_PLURK_COUNT: number = 10;
+
+  readonly plurkApi: PlurkClient;
+
   private readonly logger = new Logger(PlurkApiService.name);
 
   constructor(
@@ -31,7 +34,7 @@ export class PlurkApiService {
       return { token, secret: tokenSecret, authPage };
     } catch (err: any) {
       this.logger.error('Failed to get reqeust token', err.stack, err.message);
-      throw new HttpException('External server error', HttpStatus.BAD_GATEWAY);
+      throw new BadGatewayException('External server error');
     } finally {
       this.resetAuth();
     }
@@ -54,7 +57,7 @@ export class PlurkApiService {
 
   async getTimelinePlurks(auth: AuthDetail, filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
     const params: any = {
-      limit: 10,
+      limit: PlurkApiService.RESPONSE_PLURK_COUNT,
       minimal_data: true,
       minimal_user: true,
     };
@@ -77,19 +80,19 @@ export class PlurkApiService {
       this.logResponse(response);
     } catch (err: any) {
       this.logger.error('Failed to retrieve response from Plurk API', err.stack, err.message);
-      throw new HttpException('External server error', HttpStatus.BAD_GATEWAY);
+      throw new BadGatewayException('External server error');
     } finally {
       this.resetAuth();
     }
     return response;
   }
 
-  private setupAuth(auth: AuthDetail) {
+  setupAuth(auth: AuthDetail) {
     this.plurkApi.token = auth.token ?? null;
     this.plurkApi.tokenSecret = auth.secret ?? null;
   }
 
-  private resetAuth() {
+  resetAuth() {
     this.plurkApi.token = '';
     this.plurkApi.tokenSecret = '';
   }
