@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PlurkClient } from 'plurk2';
 import { isNullish } from '../common/util';
@@ -34,7 +34,7 @@ export class PlurkApiService {
       return { token, secret: tokenSecret, authPage };
     } catch (err: any) {
       this.logger.error('Failed to get reqeust token', err.stack, err.message);
-      throw new HttpException('External server error', HttpStatus.BAD_GATEWAY);
+      throw new BadGatewayException('External server error');
     } finally {
       this.resetAuth();
     }
@@ -80,7 +80,7 @@ export class PlurkApiService {
       this.logResponse(response);
     } catch (err: any) {
       this.logger.error('Failed to retrieve response from Plurk API', err.stack, err.message);
-      throw new HttpException('External server error', HttpStatus.BAD_GATEWAY);
+      throw new BadGatewayException('External server error');
     } finally {
       this.resetAuth();
     }

@@ -1,5 +1,5 @@
 import { createMock, type DeepMocked } from '@golevelup/ts-jest';
-import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { PlurkClient } from 'plurk2';
@@ -29,8 +29,10 @@ describe('PlurkApiService', () => {
 
     configService.getOrThrow.mockReturnValue(empty);
     jest.spyOn(plurkApi, 'request').mockResolvedValue(mockApiResponse);
-    jest.spyOn(plurkApi, 'getRequestToken').mockResolvedValue(new PlurkClient('request token', 'request secret', 'access token', 'access secret'));
-    jest.spyOn(plurkApi, 'getAccessToken').mockResolvedValue(new PlurkClient('request token', 'request secret', 'access token', 'access secret'));
+    jest.spyOn(plurkApi, 'getRequestToken')
+      .mockResolvedValue(new PlurkClient('request token', 'request secret', 'access token', 'access secret'));
+    jest.spyOn(plurkApi, 'getAccessToken')
+      .mockResolvedValue(new PlurkClient('request token', 'request secret', 'access token', 'access secret'));
   });
 
   beforeEach(() => {
@@ -54,7 +56,7 @@ describe('PlurkApiService', () => {
       jest.spyOn(plurkApi, 'getRequestToken').mockImplementationOnce(() => {
         throw new HttpException('error', HttpStatus.INTERNAL_SERVER_ERROR);
       });
-      await expect(plurkApiService.getRequestToken()).rejects.toThrow(HttpException);
+      await expect(plurkApiService.getRequestToken()).rejects.toThrow(BadGatewayException);
     });
 
     it('must reset authentication details before and after each request', async() => {
