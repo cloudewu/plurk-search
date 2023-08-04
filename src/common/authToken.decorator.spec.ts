@@ -31,5 +31,17 @@ describe('AuthToken', () => {
       expect(token).toBeDefined();
       expect(token).toBe(authorizationToken);
     });
+
+    it('should return null without Authorization header', () => {
+      // given
+      const req = httpMock.createRequest();
+      const res = httpMock.createResponse();
+      const ctx = new ExecutionContextHost([req, res]);
+      // when
+      const factory = getParamDecoratorFactory(AuthToken);
+      const token = factory(null, ctx);
+      // then
+      expect(token).not.toBeDefined();
+    });
   });
 });

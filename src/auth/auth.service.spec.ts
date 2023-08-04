@@ -1,5 +1,5 @@
 import { createMock, type DeepMocked } from '@golevelup/ts-jest';
-import { BadRequestException, UnprocessableEntityException } from '@nestjs/common';
+import { UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
@@ -81,20 +81,20 @@ describe('AuthService', () => {
 
     it('should reject invalid token', async() => {
       const code = 1234;
-      await expect(callWithArgs(null, code)).rejects.toThrow(BadRequestException);
-      await expect(callWithArgs(undefined, code)).rejects.toThrow(BadRequestException);
+      await expect(callWithArgs(null, code)).rejects.toThrow(UnauthorizedException);
+      await expect(callWithArgs(undefined, code)).rejects.toThrow(UnauthorizedException);
       await expect(callWithArgs('invalid token', code)).rejects.toThrow(UnprocessableEntityException);
       jest.spyOn(cryptoService, 'decrypt').mockImplementationOnce((...args) => 'decrypted token');
-      await expect(callWithArgs('invalid token', code)).rejects.toThrow(BadRequestException);
+      await expect(callWithArgs('invalid token', code)).rejects.toThrow(UnauthorizedException);
     });
 
     it('should reject empty code', async() => {
       const token = 'This is a token';
       jest.spyOn(authService, 'decryptAndVerify').mockImplementationOnce((...args) => new AuthDetail());
-      await expect(callWithArgs(token, undefined)).rejects.toThrow(BadRequestException);
+      await expect(callWithArgs(token, undefined)).rejects.toThrow(UnauthorizedException);
 
       jest.spyOn(authService, 'decryptAndVerify').mockImplementationOnce((...args) => new AuthDetail());
-      await expect(callWithArgs(token, null)).rejects.toThrow(BadRequestException);
+      await expect(callWithArgs(token, null)).rejects.toThrow(UnauthorizedException);
     });
   });
 
@@ -132,8 +132,8 @@ describe('AuthService', () => {
     });
 
     it('should reject invalid tokens', () => {
-      expect(callWithArgs(undefined)).toThrow(BadRequestException);
-      expect(callWithArgs(null)).toThrow(BadRequestException);
+      expect(callWithArgs(undefined)).toThrow(UnauthorizedException);
+      expect(callWithArgs(null)).toThrow(UnauthorizedException);
     });
   });
 });

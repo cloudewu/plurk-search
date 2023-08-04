@@ -23,18 +23,48 @@ The app is still under developing and has no UI currently, but the goal is to ha
 
 ## Getting Started
 
+### Install dependencies
 ```
 yarn
+```
+
+### Prepare environments:
+We need to authenticate the user before we are able to pull data from their timeline.
+
+To do so we need the key and secret to communicate with Plurk.
+
+First, register a new plurk app here: https://www.plurk.com/PlurkApp/
+(or you can reuse any existing one if there is one)
+
+See also: https://www.plurk.com/API
+
+Then copy `.env.sample` under this repo and rename it to `.env`.
+
+Fill in `PLURK_APP_KEY` and `PLURK_APP_SECRET` with the key & secret you got from Plurk.
+
+Enter random strings for `ENCRYPTION_KEY` and `JWT_SECRET`.
+
+Modify `HOST` if you're hosting on a different hostname/port.
+
+### serve
+
+```
 yarn start
 ```
+
+Then you can access the api on http://localhost:3000/
 
 ### Development
 
 ```
 # recompile upon file changes
 yarn start:dev
+
 # debug mode & reload upon file changes
 yarn start:debug
+
+# prod
+yarn build && yarn start:prod
 ```
 
 ps. this repo reinforces code style and code quality to pass by Husky hook.
@@ -53,6 +83,16 @@ yarn test
 # or run tests upon file changes - extremely useful for TDD
 yarn test:watch
 ```
+
+Editor (e.g., vscode) not able to resolve the package?
+Check https://yarnpkg.com/getting-started/editor-sdks
+
+## Workflow
+
+![img](./img/plurk-search-uml.jpg)
+
+API workflow demo
+![img](./img/demo.gif)
 
 ## Bug Report
 
