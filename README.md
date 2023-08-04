@@ -30,16 +30,24 @@ yarn
 
 ### Prepare environments:
 We need to authenticate the user before we are able to pull data from their timeline.
+
 To do so we need the key and secret to communicate with Plurk.
-First, register a new plurk app here: https://www.plurk.com/PlurkApp/ (or you can reuse any existing one if there is one)
+
+First, register a new plurk app here: https://www.plurk.com/PlurkApp/
+(or you can reuse any existing one if there is one)
+
 See also: https://www.plurk.com/API
 
 Then copy `.env.sample` under this repo and rename it to `.env`.
+
 Fill in `PLURK_APP_KEY` and `PLURK_APP_SECRET` with the key & secret you got from Plurk.
+
 Enter random strings for `ENCRYPTION_KEY` and `JWT_SECRET`.
+
 Modify `HOST` if you're hosting on a different hostname/port.
 
 ### serve
+
 ```
 yarn start
 ```
