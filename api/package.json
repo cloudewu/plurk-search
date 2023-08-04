@@ -1,9 +1,9 @@
 {
-  "name": "plurk-search",
-  "packageManager": "yarn@3.4.1",
+  "name": "plurk-search-api",
+  "packageManager": "yarn@3.6.1",
   "private": true,
   "version": "0.0.1",
-  "description": "A specialized search engine for personal plurk contents.",
+  "description": "API layer for plurk-search, a specialized search engine for personal plurk contents.",
   "license": "MIT",
   "scripts": {
     "build": "nest build",
@@ -18,8 +18,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "postinstall": "husky install"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -47,7 +46,6 @@
     "eslint-plugin-import": "latest",
     "eslint-plugin-n": "latest",
     "eslint-plugin-promise": "latest",
-    "husky": "^8.0.0",
     "jest": "^28.1.2",
     "lint-staged": "^13.1.2",
     "node-mocks-http": "^1.12.1",

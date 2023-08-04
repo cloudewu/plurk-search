@@ -1,0 +1,25 @@
+{
+  "name": "plurk-search",
+  "packageManager": "yarn@3.6.1",
+  "private": true,
+  "version": "0.0.1",
+  "description": "A specialized search engine for personal plurk contents.",
+  "license": "MIT",
+  "scripts": {
+    "build:api": "yarn workspace plurk-search-api build",
+    "start:api": "yarn workspace plurk-search-api start",
+    "start:dev:api": "yarn workspace plurk-search-api start:dev",
+    "start:prod:api": "yarn workspace plurk-search-api start:prod",
+    "test:api": "yarn workspace plurk-search-api test",
+    "test:watch:api": "yarn workspace plurk-search-api test:watch",
+    "lint:api": "yarn workspace plurk-search-api lint",
+    "lint:staged:api": "yarn workspace plurk-search-api lint:staged",
+    "postinstall": "husky install"
+  },
+  "workspaces": [
+    "api"
+  ],
+  "devDependencies": {
+    "husky": "^8.0.3"
+  }
+}
