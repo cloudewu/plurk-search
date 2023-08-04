@@ -6,8 +6,11 @@
   "description": "A specialized search engine for personal plurk contents.",
   "license": "MIT",
   "scripts": {
+    "build:web": "yarn workspace plurk-search-web build",
     "build:api": "yarn workspace plurk-search-api build",
+    "start:web": "yarn workspace plurk-search-web start",
     "start:api": "yarn workspace plurk-search-api start",
+    "start:dev:web": "yarn workspace plurk-search-web start:dev",
     "start:dev:api": "yarn workspace plurk-search-api start:dev",
     "start:prod:api": "yarn workspace plurk-search-api start:prod",
     "test:api": "yarn workspace plurk-search-api test",
@@ -17,7 +20,8 @@
     "postinstall": "husky install"
   },
   "workspaces": [
-    "api"
+    "api",
+    "web"
   ],
   "devDependencies": {
     "husky": "^8.0.3"
