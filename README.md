@@ -76,6 +76,9 @@ yarn test
 yarn test:watch
 ```
 
+Editor (e.g., vscode) not able to resolve the package?
+Check https://yarnpkg.com/getting-started/editor-sdks
+
 ## Workflow
 
 ![img](./img/plurk-search-uml.jpg)
