@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { isNullish } from '../common/util';
 import { AuthDetail } from '../dto/authDetail.dto';
@@ -28,7 +28,7 @@ export class AuthService {
   async authenticate(requestToken: string, code: string): Promise<string> {
     const auth: AuthDetail = this.decryptAndVerify(requestToken);
     if (isNullish(code)) {
-      AuthService.raiseBadRequest('Invalid Verifier');
+      AuthService.raiseUnauthorized('Invalid Verifier');
     }
 
     const { token, secret } = await this.plurkApiService.authenticate(auth, code);
@@ -42,7 +42,7 @@ export class AuthService {
 
   decryptAndVerify(token: string): AuthDetail {
     if (isNullish(token)) {
-      AuthService.raiseBadRequest('Invalid Token');
+      AuthService.raiseUnauthorized('Invalid Token');
     }
 
     const decryptedToken = this.cryptoService.decrypt(token);
@@ -57,11 +57,11 @@ export class AuthService {
       this.jwtService.verify(token);
     } catch (err: any) {
       this.logger.error('token verification failed', err.stack, err.message);
-      AuthService.raiseBadRequest('Invalid Token');
+      AuthService.raiseUnauthorized('Invalid Token');
     }
   }
 
-  static raiseBadRequest(message: string | undefined = undefined) {
-    throw new BadRequestException(message);
+  static raiseUnauthorized(message: string | undefined = undefined) {
+    throw new UnauthorizedException(message);
   }
 }
