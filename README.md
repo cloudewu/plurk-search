@@ -28,7 +28,8 @@ The app is still under developing and has no UI currently, but the goal is to ha
 yarn
 ```
 
-### Prepare environments:
+#### Prepare environments
+
 We need to authenticate the user before we are able to pull data from their timeline.
 
 To do so we need the key and secret to communicate with Plurk.
@@ -38,7 +39,7 @@ First, register a new plurk app here: https://www.plurk.com/PlurkApp/
 
 See also: https://www.plurk.com/API
 
-Then copy `.env.sample` under this repo and rename it to `.env`.
+Then goto `/api` folder, copy `.env.sample` under this repo and rename it to `.env`.
 
 Fill in `PLURK_APP_KEY` and `PLURK_APP_SECRET` with the key & secret you got from Plurk.
 
@@ -46,25 +47,22 @@ Enter random strings for `ENCRYPTION_KEY` and `JWT_SECRET`.
 
 Modify `HOST` if you're hosting on a different hostname/port.
 
-### serve
+#### serve
 
 ```
-yarn start
+yarn start:api
 ```
 
 Then you can access the api on http://localhost:3000/
 
-### Development
+#### development
 
 ```
 # recompile upon file changes
-yarn start:dev
-
-# debug mode & reload upon file changes
-yarn start:debug
+yarn start:dev:api
 
 # prod
-yarn build && yarn start:prod
+yarn build:api && yarn start:prod:api
 ```
 
 ps. this repo reinforces code style and code quality to pass by Husky hook.
@@ -73,7 +71,7 @@ You must fix all issues from eslint before committing, and must pass all tests b
 linting
 
 ```
-yarn lint
+yarn lint:api
 ```
 
 testing
@@ -81,7 +79,7 @@ testing
 ```
 yarn test
 # or run tests upon file changes - extremely useful for TDD
-yarn test:watch
+yarn test:watch:api
 ```
 
 Editor (e.g., vscode) not able to resolve the package?
