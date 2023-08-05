@@ -6,8 +6,8 @@
   "description": "A specialized search engine for personal plurk contents.",
   "license": "MIT",
   "scripts": {
-    "start": "next start",
-    "start:dev": "next dev",
+    "start": "next start -p 9980",
+    "start:dev": "next dev -p 9980",
     "build": "next build",
     "lint": "next lint",
     "lint:fix": "next lint --fix"

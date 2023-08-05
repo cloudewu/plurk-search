@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -10,7 +11,8 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
-  await app.listen(3000);
+  const configService: ConfigService = app.get(ConfigService);
+  await app.listen(configService.getOrThrow<number>('port'));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises

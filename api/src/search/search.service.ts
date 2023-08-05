@@ -72,7 +72,7 @@ export class SearchService {
     params.offset = response.lastTimestampStr ?? null;
 
     // todo: refactor
-    let nextLink = `${this.configService.get<string>('HOST') ?? ''}/search`;
+    let nextLink = `${this.configService.get<string>('baseUrl') ?? ''}/search`;
     let first = true;
     for (const key in params) {
       const value = params[key];
