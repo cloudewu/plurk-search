@@ -4,12 +4,10 @@ import { Typography } from '@mui/material';
 export default function AuthPage() {
   return (
     <main>
-      <div className='py-3'>
-        <Typography variant='h4' color='error'>
-          <ConstructionIcon fontSize='large'></ConstructionIcon>
-          THIS PAGE IS UNDER CONSTRUCTION
-        </Typography>
-      </div>
+      <Typography variant='h4' color='error' sx={{ my: 4 }}>
+        <ConstructionIcon fontSize='large'></ConstructionIcon>
+        THIS PAGE IS UNDER CONSTRUCTION
+      </Typography>
     </main>
   );
 }

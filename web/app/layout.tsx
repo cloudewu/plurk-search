@@ -21,8 +21,8 @@ export default function RootLayout({
       </Head>
       <body>
         <AppBar position='static'>
-          <Toolbar className='px-3'>
-            <IconButton className='text-white' href='/'>
+          <Toolbar disableGutters sx={{ px: 2 }}>
+            <IconButton href='/' sx={{ color: 'white' }}>
               <HomeIcon></HomeIcon>
             </IconButton>
             <Typography variant='h6'>
