@@ -15,6 +15,7 @@
     "start:prod:api": "yarn workspace plurk-search-api start:prod",
     "test:api": "yarn workspace plurk-search-api test",
     "test:watch:api": "yarn workspace plurk-search-api test:watch",
+    "lint:web": "yarn workspace plurk-search-web lint",
     "lint:api": "yarn workspace plurk-search-api lint",
     "lint:staged:api": "yarn workspace plurk-search-api lint:staged",
     "postinstall": "husky install"

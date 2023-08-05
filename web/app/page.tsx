@@ -1,6 +1,6 @@
 import { Button, Typography } from '@mui/material';
 
-export default function Home() {
+export default function HomePage() {
   return (
     <main>
       <div className='my-3'>
