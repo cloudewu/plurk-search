@@ -1,9 +1,10 @@
+import { FilterType } from '@/dto/FilterType.enum';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import FilterOptions from './FilterOptions';
 import SubmitButton from './SubmitButton';
-import FilterType from './filterType';
 
 export default function SearchForm() {
   return (
@@ -24,15 +25,15 @@ export default function SearchForm() {
         select
         id='filter'
         label='類型'
-        defaultValue='NONE'
+        defaultValue={FilterOptions[FilterType.NONE].value}
         margin='normal'
         sx={{ width: '200px', mx: 2 }}
         helperText='搜尋特定時間軸上的內容'
       >
         {
-          FilterType.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
+          Object.values(FilterOptions).map(({ value, label }) => (
+            <MenuItem key={value} value={value}>
+              { label }
             </MenuItem>
           ))
         }
@@ -47,7 +48,9 @@ export default function SearchForm() {
         helperText='只搜尋此時間以前的時間軸'
       >
       </TextField>
+
       <br />
+
       <SubmitButton
         variant='contained'
         size='large'
