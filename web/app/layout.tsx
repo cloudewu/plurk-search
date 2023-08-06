@@ -1,7 +1,6 @@
 import HomeIcon from '@mui/icons-material/Home';
 import { AppBar, Container, IconButton, Toolbar, Typography } from '@mui/material';
 import type { Metadata } from 'next';
-import Head from 'next/head';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -16,9 +15,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-tw">
-      <Head>
-      </Head>
+    <html lang='zh-tw'>
       <body>
         <AppBar position='static'>
           <Toolbar disableGutters sx={{ px: 2 }}>
@@ -30,6 +27,7 @@ export default function RootLayout({
             </Typography>
           </Toolbar>
         </AppBar>
+
         <Container>
           {children}
         </Container>
