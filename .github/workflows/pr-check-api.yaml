@@ -1,8 +1,10 @@
-name: PR Check
+name: PR Check - API
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev ]
+    paths:
+      - 'api/**'
 
 jobs:
   build:
@@ -11,6 +13,10 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x, 18.x]
+
+    defaults:
+      run:
+        working-directory: api
 
     steps:
       - uses: actions/checkout@v3

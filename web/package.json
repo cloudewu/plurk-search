@@ -1,0 +1,39 @@
+{
+  "name": "plurk-search-web",
+  "packageManager": "yarn@3.6.1",
+  "private": true,
+  "version": "0.0.1",
+  "description": "A specialized search engine for personal plurk contents.",
+  "license": "MIT",
+  "scripts": {
+    "start": "next start -p 9980",
+    "start:dev": "next dev -p 9980",
+    "build": "next build",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.3",
+    "next": "^13.4.12",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^13.4.12",
+    "@types/node": "^20.4.7",
+    "@types/react": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "eslint-config-standard-with-typescript": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-n": "latest",
+    "eslint-plugin-promise": "latest",
+    "eslint-plugin-react": "latest",
+    "typescript": "^5.1.6"
+  }
+}

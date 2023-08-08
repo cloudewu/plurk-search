@@ -1,4 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-yarn lint:staged
+echo linting api
+yarn lint:staged:api
+
+echo linging web
+yarn lint:web
