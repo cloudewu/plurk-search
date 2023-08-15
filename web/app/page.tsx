@@ -1,16 +1,13 @@
-import { Button, Typography } from '@mui/material';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { COOKIE_TOKEN } from '../consts/const';
 
 export default function HomePage() {
-  return (
-    <main>
-      <div>
-        <Typography variant='h4' sx={{ my: 4 }}>
-          start searching:
-          <Button href='/search' variant='contained' size='large' color='secondary' sx={{ mx: 2 }}>
-            Go!
-          </Button>
-        </Typography>
-      </div>
-    </main>
-  );
-}
+  const hasToken = cookies().has(COOKIE_TOKEN);
+
+  if (hasToken) {
+    redirect('/search');
+  } else {
+    redirect('/auth');
+  }
+};
