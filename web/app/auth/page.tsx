@@ -1,13 +1,17 @@
-import ConstructionIcon from '@mui/icons-material/Construction';
-import Typography from '@mui/material/Typography';
+import { COOKIE_TOKEN } from '@/consts/const';
+import Box from '@mui/material/Box';
+import { cookies } from 'next/headers';
+import ReLoginPanel from './ReLoginPanel';
+import RequestPanel from './RequestPanel';
 
 export default function AuthPage() {
+  const token = cookies().get(COOKIE_TOKEN);
+
   return (
     <main>
-      <Typography variant='h4' color='error' sx={{ my: 4 }}>
-        <ConstructionIcon fontSize='large'></ConstructionIcon>
-        THIS PAGE IS UNDER CONSTRUCTION
-      </Typography>
+      <Box p={4}>
+        { token !== undefined ? <ReLoginPanel /> : <RequestPanel /> }
+      </Box>
     </main>
   );
-}
+};
