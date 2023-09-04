@@ -7,11 +7,11 @@ const nextConfig = {
         missing: [
           {
             type: 'cookie',
-            key: 'token'
+            key: 'authToken'
           }
         ],
         destination: '/auth',
-        permanent: false
+        permanent: false,
       }
     ];
   },
