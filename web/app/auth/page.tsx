@@ -1,24 +1,11 @@
-import PageTitle from '@/components/PageTitle';
-import { COOKIE_TOKEN } from '@/consts/const';
-import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { cookies } from 'next/headers';
 import NextLink from 'next/link';
-import AuthenticationSection from './AuthenticationSection';
 
 export default function AuthPage() {
-  const token = cookies().get(COOKIE_TOKEN);
-
   return (
     <Box>
-      { token !== undefined && <AlreadyLoggedInAlert /> }
-
-      <PageTitle>
-        應用程式授權
-      </PageTitle>
-
       <Typography>
         由於時間軸為私人資料，我們需要取得使用者河道的存取權限，才能進行搜尋。
       </Typography>
@@ -32,24 +19,9 @@ export default function AuthPage() {
         我們（時光機Plus）承諾不會儲存、紀錄、閱覽任何使用者隱私內容，但可能會紀錄部分資訊供除錯使用。會被紀錄的內容如下：授權時間，搜尋字串，搜尋到的結果數量。
       </Typography>
 
-      { token === undefined && <AuthenticationSection /> }
+      <NextLink href='/auth/login' passHref>
+        <Button variant='contained' size='large' sx={{ my: 2 }}>登入驗證</Button>
+      </NextLink>
     </Box>
-  );
-};
-
-function AlreadyLoggedInAlert() {
-  return (
-    <Alert
-      severity='info'
-      color='info'
-      action={
-        <NextLink href='/search' passHref>
-          <Button variant='outlined' color='primary' sx={{ mx: 0.5 }}>
-            開始搜尋
-          </Button>
-        </NextLink>
-      }>
-      你已經申請過驗證碼囉，是否前往搜尋？
-    </Alert>
   );
 };

@@ -4,12 +4,12 @@ import type { PlurkUserDto } from './PlurkUser.dto';
 
 export class PlurkDto extends BaseDto {
   id?: number;
-  link: string;
+  link!: string;
   ownerId?: number;
   owner?: PlurkUserDto;
   plurkType?: PlurkType;
   content?: string;
-  content_html?: string;
+  contentHtml?: string;
   postTime?: Date;
   lastEditTime?: Date;
 }
