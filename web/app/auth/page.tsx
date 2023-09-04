@@ -1,7 +1,6 @@
+import NavButton from '@/components/NavButton';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import NextLink from 'next/link';
 
 export default function AuthPage() {
   return (
@@ -19,9 +18,14 @@ export default function AuthPage() {
         我們（時光機Plus）承諾不會儲存、紀錄、閱覽任何使用者隱私內容，但可能會紀錄部分資訊供除錯使用。會被紀錄的內容如下：授權時間，搜尋字串，搜尋到的結果數量。
       </Typography>
 
-      <NextLink href='/auth/login' passHref>
-        <Button variant='contained' size='large' sx={{ my: 2 }}>登入驗證</Button>
-      </NextLink>
+      <NavButton
+        href='/auth/login'
+        variant='contained'
+        size='large'
+        sx={{ my: 2 }}
+      >
+        登入驗證
+      </NavButton>
     </Box>
   );
 };

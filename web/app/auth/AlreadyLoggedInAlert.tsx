@@ -1,6 +1,5 @@
+import NavButton from '@/components/NavButton';
 import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
-import NextLink from 'next/link';
 
 export default function AlreadyLoggedInAlert() {
   return (
@@ -8,11 +7,14 @@ export default function AlreadyLoggedInAlert() {
       severity='info'
       color='info'
       action={
-        <NextLink href='/search' passHref>
-          <Button variant='outlined' color='primary' sx={{ mx: 0.5 }}>
-            開始搜尋
-          </Button>
-        </NextLink>
+        <NavButton
+          href='/search'
+          variant='outlined'
+          color='primary'
+          sx={{ mx: 0.5 }}
+        >
+          開始搜尋
+        </NavButton>
       }>
       你已經申請過驗證碼囉，是否前往搜尋？
     </Alert>

@@ -30,11 +30,9 @@ export default function RootLayout({
       <body>
         <AppBar position='static'>
           <Toolbar disableGutters sx={{ px: 2 }}>
-            <NextLink href='/' passHref>
-              <IconButton sx={{ color: 'white' }}>
-                <HomeIcon />
-              </IconButton>
-            </NextLink>
+            <IconButton href='/' LinkComponent={NextLink} sx={{ color: 'white' }}>
+              <HomeIcon />
+            </IconButton>
             <Typography variant='h6' sx={{ flexGrow: 1 }}>
               Plurk Search
             </Typography>
