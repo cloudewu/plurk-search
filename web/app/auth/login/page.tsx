@@ -17,8 +17,8 @@ export default async function Login() {
   async function submit(formData: FormData) {
     'use server';
 
-    const code = formData.get('code')?.toString()?.trim();
-    const token = await Gateway.postAuth(data.token, code ?? 'invalid');
+    const code = (formData.get('code') ?? '').toString().trim().normalize?.('NFKC');
+    const token = await Gateway.postAuth(data.token, code);
     void updateCookies(
       {
         [COOKIE_TOKEN]: {
@@ -46,7 +46,7 @@ export default async function Login() {
         required
         name='code'
         size='small'
-        inputProps={{ inputMode: 'numeric', pattern: '\\s*[0-9]{6}\\s*' }}
+        inputProps={{ inputMode: 'numeric', pattern: '\\s*[0-9\uFF10-\uFF19]{6}\\s*' }}
         sx={{ my: 2, display: 'block' }}
       />
 
