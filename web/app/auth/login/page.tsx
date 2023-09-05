@@ -1,4 +1,5 @@
-import addTokenToCookies from '@/actions/addTokenToCookies';
+import updateCookies from '@/actions/updateCookies';
+import { COOKIE_TOKEN } from '@/constants';
 import type { AuthResponseDto } from '@/dto/authResponse.dto';
 import Gateway from '@/lib/Gateway';
 import Box from '@mui/material/Box';
@@ -8,14 +9,25 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { redirect } from 'next/navigation';
 
+const SEVEN_DAYS = 7 * 24 * 60 * 60;
+
 export default async function Login() {
   const data: AuthResponseDto = await Gateway.getAuth();
 
   async function submit(formData: FormData) {
     'use server';
+
     const code = formData.get('code')?.toString()?.trim();
     const token = await Gateway.postAuth(data.token, code ?? 'invalid');
-    void addTokenToCookies(token);
+    void updateCookies(
+      {
+        [COOKIE_TOKEN]: {
+          value: token,
+          secure: true,
+          maxAge: SEVEN_DAYS,
+        },
+      },
+    );
     redirect('/');
   }
 

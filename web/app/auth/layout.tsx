@@ -1,5 +1,5 @@
 import PageTitle from '@/components/PageTitle';
-import { COOKIE_TOKEN } from '@/consts/const';
+import { COOKIE_TOKEN } from '@/constants';
 import Box from '@mui/material/Box';
 import { cookies } from 'next/headers';
 import type { ReactNode } from 'react';

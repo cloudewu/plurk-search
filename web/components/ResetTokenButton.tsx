@@ -1,11 +1,12 @@
 'use client';
 
-import removeTokenFromCookies from '@/actions/removeTokenFromCookies';
+import updateCookies from '@/actions/updateCookies';
+import { COOKIE_TOKEN } from '@/constants';
 import Button, { type ButtonProps } from '@mui/material/Button';
 import { useRouter } from 'next/navigation';
 import { useState, type MouseEventHandler } from 'react';
 
-const COOKIE_TIMEOUT = 500;
+const REFRESH_TIMEOUT = 500;
 
 export default function ResetTokenButton({
   children,
@@ -16,11 +17,11 @@ export default function ResetTokenButton({
 
   const handleReset: MouseEventHandler = (e) => {
     setProcessing(true);
-    void removeTokenFromCookies();
+    void updateCookies({}, [COOKIE_TOKEN]);
     setTimeout(() => {
       setProcessing(false);
       router.refresh();
-    }, COOKIE_TIMEOUT);
+    }, REFRESH_TIMEOUT);
   };
 
   return (

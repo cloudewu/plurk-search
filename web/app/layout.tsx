@@ -1,4 +1,5 @@
 import ResetTokenButton from '@/components/ResetTokenButton';
+import { COOKIE_TOKEN } from '@/constants';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AppBar from '@mui/material/AppBar';
@@ -9,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import NextLink from 'next/link';
-import { COOKIE_TOKEN } from '../consts/const';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const loggedIn = !((cookies()?.get(COOKIE_TOKEN)) == null);
+  const loggedIn = cookies().has(COOKIE_TOKEN);
 
   return (
     <html lang='zh-tw'>
