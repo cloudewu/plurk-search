@@ -2,7 +2,12 @@ import type { AuthResponseDto } from '@/dto/authResponse.dto';
 
 /** todo: unit tests **/
 const Gateway = {
-  API: (process.env.API ?? 'localhost:9981') + '/auth',
+  /** ------ CONSTANTS ------ **/
+  HOST: process.env.API ?? 'http://localhost:9981',
+  ENDPOINT: '/auth',
+  get API() {
+    return this.HOST + this.ENDPOINT;
+  },
 
   /** ------ ENDPOINTS ------ **/
   async getAuth(): Promise<AuthResponseDto> {
@@ -39,35 +44,36 @@ const Gateway = {
   /** ------ UTILITIES ------ **/
   async _request(options: RequestInit = {}): Promise<Response> {
     const method = options.method ?? 'GET';
-    const path = `${method} ${this.API}`;
+    const action = `${method} ${this.ENDPOINT}`;
 
     let res: Response;
     try {
-      console.info(path);
+      console.info(action);
       res = await fetch(this.API, options);
     } catch (err: any) {
-      throw await this._throwError(path, err);
+      throw await this._throwError(action, err);
     }
 
     if (!res.ok) {
-      throw await this._throwError(path, res);
+      throw await this._throwError(action, res);
     }
 
     return res;
   },
-  async _throwError(path: string, reason: Response | Error | string): Promise<never | Error> {
+
+  async _throwError(action: string, reason: Response | Error | string): Promise<never | Error> {
     console.error(reason);
 
     if (typeof reason === 'string') {
-      throw new Error(`[${path}] ${reason}`);
+      throw new Error(`[${action}] ${reason}`);
     }
 
     if (reason instanceof Error) {
-      throw new Error(`[${path}] Service Unavailable`, { cause: reason });
+      throw new Error(`[${action}] Service Unavailable`, { cause: reason });
     }
 
     const error = await reason.json();
-    throw new Error(`[${path}] ${reason.status} ${reason.statusText} - ${error.message as string}`);
+    throw new Error(`[${action}] ${reason.status} ${reason.statusText} - ${error.message as string}`);
   },
 };
 
