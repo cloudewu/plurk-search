@@ -7,8 +7,10 @@ import { useEffect, useState, type MouseEventHandler } from 'react';
 
 export default function Error({
   error,
+  reset,
 }: {
   error: Error & { digest?: string }
+  reset: () => void
 }) {
   const [clicked, setClicked] = useState<boolean>(false);
 
@@ -18,6 +20,7 @@ export default function Error({
 
   const handleClick: MouseEventHandler = (_e) => {
     setClicked(true);
+    reset();
     window.location.reload();
   };
 
@@ -31,7 +34,7 @@ export default function Error({
       </Button>
 
       <Typography
-        component='pre'
+        variant='body2'
         my={2}
         p={2}
         color='gray'
