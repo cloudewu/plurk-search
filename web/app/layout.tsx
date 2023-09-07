@@ -33,7 +33,7 @@ export default function RootLayout({
             <IconButton href='/' LinkComponent={NextLink} sx={{ color: 'white' }}>
               <HomeIcon />
             </IconButton>
-            <Typography variant='h6' sx={{ flexGrow: 1 }}>
+            <Typography variant='h6' component='h1' sx={{ flexGrow: 1 }}>
               Plurk Search
             </Typography>
             {

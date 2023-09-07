@@ -6,6 +6,6 @@ export default function PageTitle({
   children: React.ReactNode
 }) {
   return (
-    <Typography variant='h4' mt={2} mb={4}>{ children }</Typography>
+    <Typography variant='h4' component='h2' mt={2} mb={5}>{ children }</Typography>
   );
 };
