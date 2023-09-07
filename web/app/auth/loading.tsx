@@ -7,7 +7,7 @@ export default function Loading() {
     <Box display='flex' gap={2} justifyContent='start' alignItems='center'>
       <CircularProgress />
       <Typography variant='button'>
-        Loading...
+        加載中……
       </Typography>
     </Box>
   );
