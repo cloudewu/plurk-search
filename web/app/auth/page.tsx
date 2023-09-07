@@ -1,21 +1,58 @@
 import NavButton from '@/components/NavButton';
+import SectionTitle from '@/components/SectionTitle';
+import TextBold from '@/components/TextStrong';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 
 export default function AuthPage() {
+  const startButtonText = '登入驗證';
+
   return (
     <Box>
+      <SectionTitle>
+        這是什麼？
+      </SectionTitle>
       <Typography>
-        由於時間軸為私人資料，我們需要取得使用者河道的存取權限，才能進行搜尋。
+        由於時間軸為私人資料，我們需要瀏覽使用者河道的權限，才能進行搜尋。
+      </Typography>
+
+      <SectionTitle>
+        我該怎麼做？
+      </SectionTitle>
+      <Stepper orientation='vertical'>
+        <Step active>
+          <StepLabel>點擊頁面最下方的「{startButtonText}」按鈕，開始授權程序。</StepLabel>
+        </Step>
+        <Step active>
+          <StepLabel>跳轉至授權頁後，請點擊頁面顯示的連結（由噗浪官方提供），前往噗浪進行驗證。噗浪可能會要求您進行登入。</StepLabel>
+        </Step>
+        <Step active>
+          <StepLabel>依噗浪指示，取得六位數字的驗證碼。</StepLabel>
+        </Step>
+        <Step active>
+          <StepLabel>回到本網站，於輸入框填寫驗證碼後送出。</StepLabel>
+        </Step>
+      </Stepper>
+
+      <SectionTitle>
+        有什麼要注意的嗎？
+      </SectionTitle>
+      <Typography>
+        本網站使用
+        {' '}
+        <Link href='https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Cookies'>Cookie</Link>
+        {' '}
+        來紀錄您的授權碼，以進行河道搜尋。
       </Typography>
       <Typography>
-        如果你願意授權給本網頁的話，請點擊下方按鈕開始授權，我們會將你導向噗浪登入頁面，請按照頁面指示獲取六位數字的驗證碼後，將驗證碼填寫至下方輸入框。
-      </Typography>
-      <Typography variant='h6' color='error' my={2}>
-        注意！被授權的應用程式有能力得到<strong>所有</strong>使用者資料，授權任何應用程式前請<strong>務必確認您信任該程式</strong>。
+        Cookie 保存期限為七天，所以在同一個瀏覽器中，您每七天必需重新登入一次。
       </Typography>
       <Typography>
-        我們（時光機Plus）承諾不會儲存、紀錄、閱覽任何使用者隱私內容，但可能會紀錄部分資訊供除錯使用。會被紀錄的內容如下：授權時間，搜尋字串，搜尋到的結果數量。
+        另外 Cookie 無法跨裝置共用，所以每當您使用不同裝置、瀏覽器、或者手動清除 Cookie 之後，皆須重新申請授權，且新授權會導致原本的授權失效。
       </Typography>
 
       <NavButton
@@ -24,8 +61,13 @@ export default function AuthPage() {
         size='large'
         sx={{ my: 2 }}
       >
-        登入驗證
+        { startButtonText }
       </NavButton>
+
+      <Typography variant='h6' color='error' my={2}>
+        注意！被授權的應用程式有能力得到<TextBold weight={600}>所有</TextBold>使用者資料，
+        授權任何應用程式前請<TextBold>務必確認您信任該程式</TextBold>。
+      </Typography>
     </Box>
   );
 };
