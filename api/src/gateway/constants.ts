@@ -114,6 +114,7 @@ export const expectedSerializedResult = new PlurksDto({
   plurks: [
     new PlurkDto({
       id: 1000000000,
+      link: 'https://www.plurk.com/p/gjdgxs',
       ownerId: 99999,
       owner: new PlurkUserDto({
         id: 99999,
@@ -122,12 +123,13 @@ export const expectedSerializedResult = new PlurksDto({
       }),
       plurkType: PlurkType.ANONYMOUS,
       content: 'Content \n Content',
-      content_html: 'Content <br/> Content',
+      contentHtml: 'Content <br/> Content',
       postTime: new Date('2023-03-05T00:00:00.000Z'),
       lastEditTime: null,
     }),
     new PlurkDto({
       id: 1500000000,
+      link: 'https://www.plurk.com/p/ot27eo',
       ownerId: 1000000,
       owner: new PlurkUserDto({
         id: 1000000,
@@ -136,7 +138,7 @@ export const expectedSerializedResult = new PlurksDto({
       }),
       plurkType: PlurkType.PUBLIC,
       content: 'content \n content',
-      content_html: 'content <br/> content',
+      contentHtml: 'content <br/> content',
       postTime: new Date('2023-03-04T00:00:00.000Z'),
       lastEditTime: null,
     }),

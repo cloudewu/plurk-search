@@ -1,7 +1,7 @@
 import { expectedSerializedResult, mockApiResponse } from './constants';
 import { PlurksSerializer } from './plurks.serializer';
 
-describe('PlurkSerializer', () => {
+describe('PlurksSerializer', () => {
   let plurkSerializer: PlurksSerializer;
 
   beforeAll(async() => {
