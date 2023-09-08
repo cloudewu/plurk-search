@@ -1,12 +1,12 @@
 import PageTitle from '@/components/PageTitle';
+import { FilterType } from '@/dto/FilterType.enum';
 import Gateway from '@/lib/Gateway';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import { FilterType } from '../../dto/FilterType.enum';
 import SearchForm from './SearchForm';
 import SearchResults from './SearchResults';
 
-interface SearchParameters {
+export interface SearchParameters {
   query?: string
   filter?: string
   offset?: string

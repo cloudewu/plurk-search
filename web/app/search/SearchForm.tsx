@@ -3,8 +3,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import { redirect } from 'next/navigation';
 import FilterOptions from './FilterOptions';
 import SubmitButton from './SubmitButton';
+import type { SearchParameters } from './page';
 
 export default function SearchForm({
   query,
@@ -17,14 +19,30 @@ export default function SearchForm({
 }) {
   const initialDateString = offset?.toLocaleString('fr-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
+  async function submit(formData: FormData) {
+    'use server';
+
+    const params: SearchParameters = {};
+    const query: string | undefined = formData.get('query')?.toString();
+    if (query != null) params.query = query;
+    const filter: string | undefined = formData.get('filter')?.toString();
+    if (filter != null) params.filter = filter;
+    const parsedOffset = Date.parse(formData.get('offset')?.toString() ?? '');
+    const offset = !isNaN(parsedOffset) && new Date(parsedOffset).toISOString();
+    if (offset !== false) params.offset = offset;
+
+    redirect('/search?' + new URLSearchParams(params as Record<string, string>).toString());
+  }
+
   return (
     <Box
       component='form'
+      action={submit as (formData: FormData) => void}
       mt={4}
       mb={8}
     >
       <TextField
-        id='query'
+        name='query'
         label='關鍵字'
         variant='outlined'
         margin='normal'
@@ -34,7 +52,7 @@ export default function SearchForm({
       />
       <TextField
         select
-        id='filter'
+        name='filter'
         label='類型'
         defaultValue={FilterOptions[filter ?? FilterType.NONE].value}
         margin='normal'
@@ -51,7 +69,7 @@ export default function SearchForm({
       </TextField>
       <TextField
         type='date'
-        id='filter'
+        name='offset'
         label='起始時間'
         defaultValue={initialDateString}
         InputLabelProps={{ shrink: true }}
@@ -64,10 +82,11 @@ export default function SearchForm({
       <br />
 
       <SubmitButton
+        type='submit'
         variant='contained'
         size='large'
+        float='right'
         endIcon={ <SearchIcon /> }
-        sx={{ float: 'right' }}
       >
         搜尋
       </SubmitButton>
