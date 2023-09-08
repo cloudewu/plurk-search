@@ -6,7 +6,17 @@ import TextField from '@mui/material/TextField';
 import FilterOptions from './FilterOptions';
 import SubmitButton from './SubmitButton';
 
-export default function SearchForm() {
+export default function SearchForm({
+  query,
+  filter,
+  offset,
+}: {
+  query: string
+  filter?: FilterType
+  offset?: Date
+}) {
+  const initialDateString = offset?.toLocaleString('fr-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
   return (
     <Box
       component='form'
@@ -18,6 +28,7 @@ export default function SearchForm() {
         label='關鍵字'
         variant='outlined'
         margin='normal'
+        defaultValue={query}
         sx={{ width: 1 / 3, minWidth: '200px', mx: 2 }}
         helperText='只顯示包含此關鍵字的噗文'
       />
@@ -25,7 +36,7 @@ export default function SearchForm() {
         select
         id='filter'
         label='類型'
-        defaultValue={FilterOptions[FilterType.NONE].value}
+        defaultValue={FilterOptions[filter ?? FilterType.NONE].value}
         margin='normal'
         sx={{ width: '200px', mx: 2 }}
         helperText='搜尋特定時間軸上的內容'
@@ -42,6 +53,7 @@ export default function SearchForm() {
         type='date'
         id='filter'
         label='起始時間'
+        defaultValue={initialDateString}
         InputLabelProps={{ shrink: true }}
         margin='normal'
         sx={{ width: '200px', mx: 2 }}
