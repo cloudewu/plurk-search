@@ -1,15 +1,23 @@
+import type { FilterType } from '@/dto/FilterType.enum';
 import type { SearchResponseDto } from '@/dto/SearchResponse.dto';
+import Gateway from '@/lib/Gateway';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PlurkCard from './PlurkCard';
 import SearchMoreButton from './SearchMoreButton';
 
-export default function SearchResults({
-  data,
+export default async function SearchResults({
+  query,
+  filter,
+  offset,
 }: {
-  data: SearchResponseDto
+  query: string
+  filter?: FilterType
+  offset?: Date
 }) {
+  const data: SearchResponseDto = await Gateway.getSearch(query, filter, offset);
+
   return (
     <Box>
       <Typography variant='h5' mb={4}>

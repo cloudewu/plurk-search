@@ -1,10 +1,10 @@
-import PageTitle from '@/components/PageTitle';
 import { FilterType } from '@/dto/FilterType.enum';
-import Gateway from '@/lib/Gateway';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import { Suspense } from 'react';
 import SearchForm from './SearchForm';
 import SearchResults from './SearchResults';
+import SearchResultsFallback from './SearchResultsFallback';
 
 export interface SearchParameters {
   query?: string
@@ -23,24 +23,22 @@ function parseParameter(params: SearchParameters) {
   return { query, filter, offset };
 }
 
-export default async function SearchPage({
+export default function SearchPage({
   searchParams,
 }: {
   searchParams: SearchParameters
 }) {
   const { query, filter, offset } = parseParameter(searchParams);
-  const data = await Gateway.getSearch(query, filter, offset);
 
   return (
     <Box>
-      <PageTitle>
-        搜尋時間軸
-      </PageTitle>
       <SearchForm query={query} filter={filter} offset={offset} />
 
       <Divider sx={{ my: 4 }} />
 
-      <SearchResults data={data} />
+      <Suspense fallback={<SearchResultsFallback />}>
+        <SearchResults query={query} filter={filter} offset={offset} />
+      </Suspense>
     </Box>
   );
 };
