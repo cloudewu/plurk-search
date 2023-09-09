@@ -1,4 +1,4 @@
-import type { PlurkDto } from '@/dto/Plurk.dto';
+import type PlurkDto from '@/dto/Plurk.dto';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Box from '@mui/material/Box';

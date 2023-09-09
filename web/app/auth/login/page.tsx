@@ -1,6 +1,6 @@
 import updateCookies from '@/actions/updateCookies';
 import { COOKIE_TOKEN } from '@/constants';
-import type { AuthResponseDto } from '@/dto/authResponse.dto';
+import type AuthResponseDto from '@/dto/authResponse.dto';
 import Gateway from '@/lib/Gateway';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';

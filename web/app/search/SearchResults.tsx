@@ -1,5 +1,5 @@
-import type { FilterType } from '@/dto/FilterType.enum';
-import type { SearchResponseDto } from '@/dto/SearchResponse.dto';
+import type SearchRequestParams from '@/dto/SearchRequestParams.dto';
+import type SearchResponseDto from '@/dto/SearchResponse.dto';
 import Gateway from '@/lib/Gateway';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
@@ -11,11 +11,7 @@ export default async function SearchResults({
   query,
   filter,
   offset,
-}: {
-  query: string
-  filter?: FilterType
-  offset?: Date
-}) {
+}: SearchRequestParams) {
   const data: SearchResponseDto = await Gateway.getSearch(query, filter, offset);
 
   return (

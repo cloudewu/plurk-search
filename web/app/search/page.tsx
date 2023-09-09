@@ -1,4 +1,5 @@
 import { FilterType } from '@/dto/FilterType.enum';
+import type SearchRequestParams from '@/dto/SearchRequestParams.dto';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { Suspense } from 'react';
@@ -6,13 +7,13 @@ import SearchForm from './SearchForm';
 import SearchResults from './SearchResults';
 import SearchResultsFallback from './SearchResultsFallback';
 
-export interface SearchParameters {
+interface QueryParams {
   query?: string
   filter?: string
   offset?: string
 };
 
-function parseParameter(params: SearchParameters) {
+function parseParameter(params: QueryParams): SearchRequestParams {
   const query: string = params.query ?? '';
   const filter: FilterType | undefined =
     (params.filter ?? '') in FilterType
@@ -26,7 +27,7 @@ function parseParameter(params: SearchParameters) {
 export default function SearchPage({
   searchParams,
 }: {
-  searchParams: SearchParameters
+  searchParams: QueryParams
 }) {
   const { query, filter, offset } = parseParameter(searchParams);
 

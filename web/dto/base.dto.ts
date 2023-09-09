@@ -5,3 +5,4 @@ export class BaseDto {
     Object.assign(this, args);
   }
 }
+export default BaseDto;

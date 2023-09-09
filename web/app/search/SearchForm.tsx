@@ -1,4 +1,5 @@
 import { FilterType } from '@/dto/FilterType.enum';
+import type SearchRequestParams from '@/dto/SearchRequestParams.dto';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
@@ -6,23 +7,18 @@ import TextField from '@mui/material/TextField';
 import { redirect } from 'next/navigation';
 import FilterOptions from './FilterOptions';
 import SubmitButton from './SubmitButton';
-import type { SearchParameters } from './page';
 
 export default function SearchForm({
   query,
   filter,
   offset,
-}: {
-  query: string
-  filter?: FilterType
-  offset?: Date
-}) {
+}: SearchRequestParams) {
   const initialDateString = offset?.toLocaleString('fr-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
   async function submit(formData: FormData) {
     'use server';
 
-    const params: SearchParameters = {};
+    const params: Record<string, string> = {};
     const query: string | undefined = formData.get('query')?.toString();
     if (query != null) params.query = query;
     const filter: string | undefined = formData.get('filter')?.toString();
@@ -31,7 +27,7 @@ export default function SearchForm({
     const offset = !isNaN(parsedOffset) && new Date(parsedOffset).toISOString();
     if (offset !== false) params.offset = offset;
 
-    redirect('/search?' + new URLSearchParams(params as Record<string, string>).toString());
+    redirect('/search?' + new URLSearchParams(params).toString());
   }
 
   return (

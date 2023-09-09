@@ -1,8 +1,8 @@
 import { COOKIE_TOKEN } from '@/constants';
-import type { SearchResponseDto } from '@/dto/SearchResponse.dto';
-import type { AuthResponseDto } from '@/dto/authResponse.dto';
+import FilterType from '@/dto/FilterType.enum';
+import type SearchResponseDto from '@/dto/SearchResponse.dto';
+import type AuthResponseDto from '@/dto/authResponse.dto';
 import { cookies } from 'next/headers';
-import { FilterType } from '../dto/FilterType.enum';
 
 /** todo: unit tests **/
 const Gateway = {

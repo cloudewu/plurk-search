@@ -3,4 +3,5 @@ export enum PlurkType {
   PRIVATE,
   ANONYMOUS,
   UNKNOWN,
-}
+};
+export default PlurkType;
