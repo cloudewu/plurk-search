@@ -1,5 +1,5 @@
 import { COOKIE_TOKEN } from '@/constants';
-import FilterType from '@/dto/FilterType.enum';
+import type FilterType from '@/dto/FilterType.enum';
 import type SearchResponseDto from '@/dto/SearchResponse.dto';
 import type AuthResponseDto from '@/dto/authResponse.dto';
 import { cookies } from 'next/headers';
