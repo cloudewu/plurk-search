@@ -1,11 +1,13 @@
+import LoadingButton from '@/components/LoadingButton';
 import type SearchRequestParams from '@/dto/SearchRequestParams.dto';
 import type SearchResponseDto from '@/dto/SearchResponse.dto';
 import Gateway from '@/lib/Gateway';
+import searchRequestParams2str from '@/lib/searchRequestParams2str';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import NextLink from 'next/link';
 import PlurkCard from './PlurkCard';
-import SearchMoreButton from './SearchMoreButton';
 
 export default async function SearchResults({
   query,
@@ -13,6 +15,11 @@ export default async function SearchResults({
   offset,
 }: SearchRequestParams) {
   const data: SearchResponseDto = await Gateway.getSearch(query, filter, offset);
+  const queryStr = searchRequestParams2str({
+    query,
+    filter,
+    offset: new Date(data.lastTimestampStr as string),
+  });
 
   return (
     <Box>
@@ -26,16 +33,19 @@ export default async function SearchResults({
         }
       </Box>
 
-      <SearchMoreButton
+      <LoadingButton
+        loadingType='click'
+        href={'/search?' + queryStr}
         variant='contained'
         fullWidth
         color='primary'
         size='large'
         sx={{ my: 2 }}
         startIcon={<SearchIcon />}
+        LinkComponent={NextLink}
       >
         搜尋更久遠以前
-      </SearchMoreButton>
+      </LoadingButton>
     </Box>
   );
 };

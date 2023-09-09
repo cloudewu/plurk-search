@@ -1,4 +1,5 @@
 import updateCookies from '@/actions/updateCookies';
+import LoadingButton from '@/components/LoadingButton';
 import { COOKIE_TOKEN } from '@/constants';
 import type AuthResponseDto from '@/dto/authResponse.dto';
 import Gateway from '@/lib/Gateway';
@@ -7,7 +8,6 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { redirect } from 'next/navigation';
-import SubmitButton from './SubmitButton';
 
 const SEVEN_DAYS = 7 * 24 * 60 * 60;
 
@@ -50,9 +50,9 @@ export default async function Login() {
         sx={{ my: 2, display: 'block' }}
       />
 
-      <SubmitButton variant='contained' type='submit' size='large' sx={{ my: 2 }}>
+      <LoadingButton loadingType='form' variant='contained' type='submit' size='large' sx={{ my: 2 }}>
         驗證
-      </SubmitButton>
+      </LoadingButton>
     </Box>
   );
 };

@@ -1,3 +1,4 @@
+import LoadingButton from '@/components/LoadingButton';
 import { FilterType } from '@/dto/FilterType.enum';
 import type SearchRequestParams from '@/dto/SearchRequestParams.dto';
 import SearchIcon from '@mui/icons-material/Search';
@@ -6,7 +7,6 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { redirect } from 'next/navigation';
 import FilterOptions from './FilterOptions';
-import SubmitButton from './SubmitButton';
 
 export default function SearchForm({
   query,
@@ -64,6 +64,7 @@ export default function SearchForm({
         }
       </TextField>
       <TextField
+        key={initialDateString}
         type='date'
         name='offset'
         label='起始時間'
@@ -77,15 +78,16 @@ export default function SearchForm({
 
       <br />
 
-      <SubmitButton
+      <LoadingButton
+        loadingType='form'
         type='submit'
+        float='right'
         variant='contained'
         size='large'
-        float='right'
         endIcon={ <SearchIcon /> }
       >
         搜尋
-      </SubmitButton>
+      </LoadingButton>
     </Box>
   );
 };

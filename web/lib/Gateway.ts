@@ -3,6 +3,7 @@ import FilterType from '@/dto/FilterType.enum';
 import type SearchResponseDto from '@/dto/SearchResponse.dto';
 import type AuthResponseDto from '@/dto/authResponse.dto';
 import { cookies } from 'next/headers';
+import searchRequestParams2str from './searchRequestParams2str';
 
 /** todo: unit tests **/
 const Gateway = {
@@ -39,23 +40,16 @@ const Gateway = {
     return await res.text();
   },
 
-  async getSearch(query: string, filter?: FilterType, offset?: Date): Promise<SearchResponseDto> {
+  async getSearch(query?: string, filter?: FilterType, offset?: Date): Promise<SearchResponseDto> {
     const token = cookies().get(COOKIE_TOKEN)?.value;
 
     if (token == null || token === '') {
       throw await this._throwError('GET /search', 'invalid token');
     }
 
-    const params: { query: string, filter: string, offset?: string } = {
-      query,
-      filter: filter != null ? FilterType[filter] : FilterType[FilterType.NONE],
-    };
-    if (offset != null) {
-      params.offset = offset.toISOString();
-    }
-
+    const queryStr = searchRequestParams2str({ query, filter, offset, required: ['query', 'filter'] });
     const res: Response = await this._request(
-      '/search?' + new URLSearchParams(params).toString(),
+      '/search?' + queryStr,
       {
         headers: {
           Authorization: token,
