@@ -7,6 +7,8 @@ import { PlurksDto } from '../dto/plurks.dto';
 
 @Injectable()
 export class PlurksSerializer {
+  PLURK_BASE_URL = 'https://www.plurk.com/p/';
+
   public serialize(apiResponse: any) {
     const userMap: Map<number, PlurkUserDto> = this.serializePlurkUsers(apiResponse.plurk_users);
     const plurks: PlurksDto = this.serializePlurks(apiResponse.plurks, userMap);
@@ -44,11 +46,15 @@ export class PlurksSerializer {
       return null;
     }
 
+    const encodedPlurkId: undefined | string = plurkObj.plurk_id?.toString(36);
+    const plurkLink = encodedPlurkId != null ? this.PLURK_BASE_URL + encodedPlurkId : null;
+
     const plurk = new PlurkDto({
       id: plurkObj.plurk_id,
+      link: plurkLink,
       ownerId: plurkObj.owner_id,
       plurkType: this.serializePlurkType(plurkObj.plurk_type),
-      content_html: plurkObj.content,
+      contentHtml: plurkObj.content,
       content: plurkObj.content_raw,
       postTime: isNullish(plurkObj.posted) ? null : new Date(plurkObj.posted),
       lastEditTime: isNullish(plurkObj.last_edited) ? null : new Date(plurkObj.last_edited),

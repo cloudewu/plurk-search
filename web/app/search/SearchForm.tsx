@@ -1,31 +1,56 @@
+import LoadingButton from '@/components/LoadingButton';
 import { FilterType } from '@/dto/FilterType.enum';
+import type SearchRequestParams from '@/dto/SearchRequestParams.dto';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import { redirect } from 'next/navigation';
 import FilterOptions from './FilterOptions';
-import SubmitButton from './SubmitButton';
 
-export default function SearchForm() {
+export default function SearchForm({
+  query,
+  filter,
+  offset,
+}: SearchRequestParams) {
+  const initialDateString = offset?.toLocaleString('fr-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+  async function submit(formData: FormData) {
+    'use server';
+
+    const params: Record<string, string> = {};
+    const query: string | undefined = formData.get('query')?.toString();
+    if (query != null) params.query = query;
+    const filter: string | undefined = formData.get('filter')?.toString();
+    if (filter != null) params.filter = filter;
+    const parsedOffset = Date.parse(formData.get('offset')?.toString() ?? '');
+    const offset = !isNaN(parsedOffset) && new Date(parsedOffset).toISOString();
+    if (offset !== false) params.offset = offset;
+
+    redirect('/search?' + new URLSearchParams(params).toString());
+  }
+
   return (
     <Box
       component='form'
+      action={submit as (formData: FormData) => void}
       mt={4}
       mb={8}
     >
       <TextField
-        id='query'
+        name='query'
         label='關鍵字'
         variant='outlined'
         margin='normal'
+        defaultValue={query}
         sx={{ width: 1 / 3, minWidth: '200px', mx: 2 }}
         helperText='只顯示包含此關鍵字的噗文'
       />
       <TextField
         select
-        id='filter'
+        name='filter'
         label='類型'
-        defaultValue={FilterOptions[FilterType.NONE].value}
+        defaultValue={FilterOptions[filter ?? FilterType.NONE].value}
         margin='normal'
         sx={{ width: '200px', mx: 2 }}
         helperText='搜尋特定時間軸上的內容'
@@ -39,9 +64,11 @@ export default function SearchForm() {
         }
       </TextField>
       <TextField
+        key={initialDateString}
         type='date'
-        id='filter'
+        name='offset'
         label='起始時間'
+        defaultValue={initialDateString}
         InputLabelProps={{ shrink: true }}
         margin='normal'
         sx={{ width: '200px', mx: 2 }}
@@ -51,14 +78,16 @@ export default function SearchForm() {
 
       <br />
 
-      <SubmitButton
+      <LoadingButton
+        loadingType='form'
+        type='submit'
+        float='right'
         variant='contained'
         size='large'
         endIcon={ <SearchIcon /> }
-        sx={{ float: 'right' }}
       >
         搜尋
-      </SubmitButton>
+      </LoadingButton>
     </Box>
   );
 };

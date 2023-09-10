@@ -6,4 +6,5 @@ export enum FilterType {
   FAVORITE,
   REPLURKED,
   MENTIONED,
-}
+};
+export default FilterType;

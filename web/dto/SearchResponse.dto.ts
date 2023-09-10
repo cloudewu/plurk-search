@@ -1,5 +1,5 @@
-import { BaseDto } from './base.dto';
-import type { PlurkDto } from './Plurk.dto';
+import BaseDto from './base.dto';
+import type PlurkDto from './Plurk.dto';
 
 export class SearchResponseDto extends BaseDto {
   request: any;
@@ -18,4 +18,5 @@ export class SearchResponseDto extends BaseDto {
       ...args,
     });
   }
-}
+};
+export default SearchResponseDto;

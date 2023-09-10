@@ -1,15 +1,26 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import LoadingButton from '@/components/LoadingButton';
+import type SearchRequestParams from '@/dto/SearchRequestParams.dto';
+import type SearchResponseDto from '@/dto/SearchResponse.dto';
+import Gateway from '@/lib/Gateway';
+import searchRequestParams2str from '@/lib/searchRequestParams2str';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import SearchMoreButton from './SearchMoreButton';
-import mockPlurks from './mockPlurks';
+import NextLink from 'next/link';
+import PlurkCard from './PlurkCard';
 
-export default function SearchResults() {
+export default async function SearchResults({
+  query,
+  filter,
+  offset,
+}: SearchRequestParams) {
+  const data: SearchResponseDto = await Gateway.getSearch(query, filter, offset);
+  const queryStr = searchRequestParams2str({
+    query,
+    filter,
+    offset: new Date(data.lastTimestampStr as string),
+  });
+
   return (
     <Box>
       <Typography variant='h5' mb={4}>
@@ -18,58 +29,23 @@ export default function SearchResults() {
 
       <Box>
         {
-          mockPlurks.plurks.map((plurk) => (
-            <Card elevation={2} sx={{ my: 2, maxHeight: '450px', overflowY: 'auto' }}>
-              <CardContent sx={{ position: 'relative', my: 1 }}>
-                <IconButton
-                  size='large'
-                  sx={{ position: 'absolute', top: 8, right: 20 }}
-                  href={plurk.link}
-                  target='_blank'
-                >
-                  <OpenInNewIcon />
-                </IconButton>
-
-                <Typography
-                  variant='h6'
-                  fontWeight='bold'
-                  mb={3}
-                  sx={{ color: 'primary.dark' }}
-                >
-                  <AccountCircleIcon sx={{ mx: 0.5, verticalAlign: 'text-bottom' }} />
-                  { plurk.owner?.displayName ?? 'plurker' }
-                  <Typography
-                    component='span'
-                    fontSize='0.8rem'
-                    mx={1}
-                    sx={{ opacity: 0.5, verticalAlign: 'text-bottom' }}
-                  >
-                    @{ plurk.owner?.nickName ?? 'user-id' }
-                  </Typography>
-                </Typography>
-                <Typography
-                  component='div'
-                  sx={{ px: 1 }}
-                  dangerouslySetInnerHTML={{
-                    __html: plurk.contentHtml ?? 'none',
-                  }}
-                />
-              </CardContent>
-            </Card>
-          ))
+          data.plurks.map(plurk => <PlurkCard key={plurk.id} plurk={plurk} />)
         }
       </Box>
 
-      <SearchMoreButton
+      <LoadingButton
+        loadingType='click'
+        href={'/search?' + queryStr}
         variant='contained'
         fullWidth
         color='primary'
         size='large'
         sx={{ my: 2 }}
         startIcon={<SearchIcon />}
+        LinkComponent={NextLink}
       >
         搜尋更久遠以前
-      </SearchMoreButton>
+      </LoadingButton>
     </Box>
   );
 };
