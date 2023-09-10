@@ -1,4 +1,4 @@
-import { FilterType } from '@/dto/FilterType.enum';
+import FilterType from '@/dto/FilterType.enum';
 
 export default {
   [FilterType.NONE]: {

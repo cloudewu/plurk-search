@@ -1,4 +1,4 @@
-import type { ButtonProps } from '@mui/material';
+import type { ButtonProps } from '@mui/material/Button';
 import Button from '@mui/material/Button';
 import NextLink from 'next/link';
 

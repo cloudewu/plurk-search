@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import Button, { type ButtonProps } from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useState, type MouseEventHandler } from 'react';
