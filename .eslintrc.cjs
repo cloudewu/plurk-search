@@ -1,35 +1,42 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: [
+      './tsconfig.eslint.json',
+      './web/tsconfig.json',
+      './api/tsconfig.eslint.json',
+    ],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
+    ecmaVersion: 'latest',
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+  ],
   extends: [
     'standard-with-typescript',
     'plugin:@typescript-eslint/recommended',
   ],
   root: true,
-  env: {
-    node: true,
-    jest: true,
-  },
-  ignorePatterns: ['.eslintrc.js'],
   rules: {
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/semi': ['error', 'always'],
     '@typescript-eslint/space-before-function-paren': ['error', 'never'],
     '@typescript-eslint/comma-dangle': ['error', 'always-multiline'],
   },
   overrides: [
     {
+      files: ['**/.eslintrc.{js,cjs}'],
+      env: {
+        node: true,
+      },
+      parserOptions: {
+        sourceType: 'script',
+      },
+    },
+    {
       files: ['**/*.spec.ts'],
       rules: {
-        'no-multiple-empty-lines': ['error', { 'max': 3 }],
+        'no-multiple-empty-lines': ['error', { max: 3 }],
       },
     },
   ],

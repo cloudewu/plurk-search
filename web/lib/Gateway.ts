@@ -69,8 +69,8 @@ const Gateway = {
     try {
       console.info(action);
       res = await fetch(this.HOST + path, options);
-    } catch (err: any) {
-      throw await this._throwError(action, err);
+    } catch (err: unknown) {
+      throw await this._throwError(action, err as Error);
     }
 
     if (!res.ok) {
