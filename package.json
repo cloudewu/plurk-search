@@ -21,7 +21,7 @@
     "lint": "yarn workspaces foreach run lint",
     "lint:web": "yarn workspace plurk-search-web lint",
     "lint:api": "yarn workspace plurk-search-api lint",
-    "lint:staged:api": "yarn workspace plurk-search-api lint:staged",
+    "lint:staged": "lint-staged",
     "postinstall": "husky install"
   },
   "workspaces": [
@@ -37,7 +37,12 @@
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-promise": "^6.0.0",
     "husky": "^8.0.3",
+    "lint-staged": "^15.0.2",
     "syncpack": "^11.2.1",
     "typescript": "^5.1.6"
+  },
+  "lint-staged": {
+    "api/{src,apps,libs,test}/**/*.ts": "eslint",
+    "web/**/*.{ts,tsx,js,jsx}": "eslint"
   }
 }
