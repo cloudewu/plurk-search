@@ -1,8 +1,8 @@
-import { COOKIE_TOKEN } from '@/constants';
-import type FilterType from '@/dto/FilterType.enum';
-import type SearchResponseDto from '@/dto/SearchResponse.dto';
-import type AuthResponseDto from '@/dto/authResponse.dto';
+import type AuthResponseDto from '@plurk-search/common/dto/AuthResponse';
+import type SearchResponseDto from '@plurk-search/common/dto/SearchResponse';
+import type FilterType from '@plurk-search/common/enum/FilterType';
 import { cookies } from 'next/headers';
+import { COOKIE_TOKEN } from '~web/constants';
 import searchRequestParams2str from './searchRequestParams2str';
 
 /** todo: unit tests **/

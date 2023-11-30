@@ -2,13 +2,14 @@ import { createMock, type DeepMocked } from '@golevelup/ts-jest';
 import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { AuthService } from '../auth/auth.service';
-import type { AuthDetail } from '../dto/authDetail.dto';
-import { FilterType } from '../dto/filter-type.enum';
-import { PlurkDto } from '../dto/plurk.dto';
-import { PlurksDto } from '../dto/plurks.dto';
-import { SearchResponseDto } from '../dto/searchResponse.dto';
-import { PlurkApiService } from '../gateway/plurk-api.service';
+import { PlurkDto } from '@plurk-search/common/dto/Plurk';
+import { PlurksDto } from '@plurk-search/common/dto/Plurks';
+import { SearchResponseDto } from '@plurk-search/common/dto/SearchResponse';
+import { FilterType } from '@plurk-search/common/enum/FilterType';
+import { AuthService } from '~api/auth/auth.service';
+import type { AuthDetail } from '~api/dataobject/AuthDetail';
+import { PlurkApiService } from '~api/gateway/plurk-api.service';
+
 import { SearchService } from './search.service';
 
 describe('SearchService', () => {

@@ -1,4 +1,4 @@
-import FilterType from '@/dto/FilterType.enum';
+import FilterType from '@plurk-search/common/enum/FilterType';
 
 export default {
   [FilterType.NONE]: {

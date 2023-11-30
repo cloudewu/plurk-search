@@ -1,9 +1,9 @@
-import { BaseDto } from './base.dto';
-import type { PlurkType } from './plurk-type.enum';
-import type { PlurkUserDto } from './plurk-user.dto';
+import type PlurkType from '@plurk-search/common/enum/PlurkType';
+import BaseDto from './Base';
+import type PlurkUserDto from './PlurkUser';
 
 export class PlurkDto extends BaseDto {
-  id!: number;
+  id?: number;
   link!: string;
   ownerId?: number;
   owner?: PlurkUserDto;
@@ -12,4 +12,5 @@ export class PlurkDto extends BaseDto {
   contentHtml?: string;
   postTime?: Date;
   lastEditTime?: Date;
-}
+};
+export default PlurkDto;

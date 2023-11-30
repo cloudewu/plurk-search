@@ -5,6 +5,7 @@ module.exports = {
       './tsconfig.eslint.json',
       './web/tsconfig.json',
       './api/tsconfig.eslint.json',
+      './packages/**/tsconfig.json',
     ],
     tsconfigRootDir: __dirname,
     sourceType: 'module',

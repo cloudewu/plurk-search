@@ -1,6 +1,7 @@
 import { createMock, type DeepMocked } from '@golevelup/ts-jest';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { AuthResponseDto } from '../dto/authResponse.dto';
+import { AuthResponse } from '@plurk-search/common/dto/AuthResponse';
+
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
@@ -16,14 +17,14 @@ describe('AuthController', () => {
 
     controller = module.get(AuthController);
     service = module.get(AuthService);
-    service.getAuthenticationLink.mockResolvedValue(new AuthResponseDto());
+    service.getAuthenticationLink.mockResolvedValue(new AuthResponse());
     service.authenticate.mockResolvedValue('access token');
   });
 
   describe('getAuthenticationPage', () => {
     it('should return the info for authentication', async() => {
       const ret = await controller.getAuthenticationPage();
-      expect(ret).toBeInstanceOf(AuthResponseDto);
+      expect(ret).toBeInstanceOf(AuthResponse);
     });
   });
 

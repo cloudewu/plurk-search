@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { isNullish } from '../common/util';
-import { PlurkType } from '../dto/plurk-type.enum';
-import { PlurkUserDto } from '../dto/plurk-user.dto';
-import { PlurkDto } from '../dto/plurk.dto';
-import { PlurksDto } from '../dto/plurks.dto';
+import { PlurkDto } from '@plurk-search/common/dto/Plurk';
+import { PlurkUserDto } from '@plurk-search/common/dto/PlurkUser';
+import { PlurksDto } from '@plurk-search/common/dto/Plurks';
+import { PlurkType } from '@plurk-search/common/enum/PlurkType';
+import { isNullish } from '~api/common/util';
 
 @Injectable()
 export class PlurksSerializer {

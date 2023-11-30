@@ -9,6 +9,7 @@
     "noEmitOnError": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "types": [],
     "jsx": "react",
     "noEmit": false

@@ -1,5 +1,5 @@
-import NavButton from '@/components/NavButton';
 import Alert from '@mui/material/Alert';
+import NavButton from '~web/components/NavButton';
 
 export default function AlreadyLoggedInAlert() {
   return (

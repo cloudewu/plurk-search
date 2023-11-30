@@ -1,13 +1,13 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from '../auth/auth.service';
-import { isNullish } from '../common/util';
-import type { AuthDetail } from '../dto/authDetail.dto';
-import { FilterType } from '../dto/filter-type.enum';
-import type { PlurkDto } from '../dto/plurk.dto';
-import type { PlurksDto } from '../dto/plurks.dto';
-import { SearchResponseDto } from '../dto/searchResponse.dto';
-import { PlurkApiService } from '../gateway/plurk-api.service';
+import type { PlurkDto } from '@plurk-search/common/dto/Plurk';
+import type { PlurksDto } from '@plurk-search/common/dto/Plurks';
+import { SearchResponseDto } from '@plurk-search/common/dto/SearchResponse';
+import { FilterType } from '@plurk-search/common/enum/FilterType';
+import { AuthService } from '~api/auth/auth.service';
+import { isNullish } from '~api/common/util';
+import type { AuthDetail } from '~api/dataobject/AuthDetail';
+import { PlurkApiService } from '~api/gateway/plurk-api.service';
 
 @Injectable()
 export class SearchService {

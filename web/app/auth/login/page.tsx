@@ -1,13 +1,13 @@
-import updateCookies from '@/actions/updateCookies';
-import LoadingButton from '@/components/LoadingButton';
-import { COOKIE_TOKEN } from '@/constants';
-import type AuthResponseDto from '@/dto/authResponse.dto';
-import Gateway from '@/lib/Gateway';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import type AuthResponseDto from '@plurk-search/common/dto/AuthResponse';
 import { redirect } from 'next/navigation';
+import updateCookies from '~web/actions/updateCookies';
+import LoadingButton from '~web/components/LoadingButton';
+import { COOKIE_TOKEN } from '~web/constants';
+import Gateway from '~web/lib/Gateway';
 
 const SEVEN_DAYS = 7 * 24 * 60 * 60;
 

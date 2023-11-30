@@ -31,7 +31,8 @@
   },
   "workspaces": [
     "api",
-    "web"
+    "web",
+    "packages/*"
   ],
   "devDependencies": {
     "@types/jest": "^29.5.8",
@@ -79,6 +80,11 @@
               "tsconfig": "<rootDir>/api/tsconfig.json"
             }
           ]
+        },
+        "moduleNameMapper": {
+          "^~api/(.*)$": "<rootDir>/api/src/$1",
+          "^~web/(.*)$": "<rootDir>/web/$1",
+          "^@plurk-search/common/(.*)$": "<rootDir>/packages/common/src/$1"
         },
         "testMatch": [
           "<rootDir>/api/**/*.spec.ts"

@@ -2,9 +2,10 @@ import { createMock, type DeepMocked } from '@golevelup/ts-jest';
 import { BadGatewayException, BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { PlurkClient } from 'plurk2';
-import { AuthDetail } from '../dto/authDetail.dto';
-import { FilterType } from '../dto/filter-type.enum';
+import { AuthDetail } from '~api/dataobject/AuthDetail';
+
 import { mockApiResponse } from './constants';
 import { PlurkApiService } from './plurk-api.service';
 import { PlurksSerializer } from './plurks.serializer';

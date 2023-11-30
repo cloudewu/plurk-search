@@ -1,12 +1,12 @@
-import LoadingButton from '@/components/LoadingButton';
-import type SearchRequestParams from '@/dto/SearchRequestParams.dto';
-import type SearchResponseDto from '@/dto/SearchResponse.dto';
-import Gateway from '@/lib/Gateway';
-import searchRequestParams2str from '@/lib/searchRequestParams2str';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import type SearchRequestParams from '@plurk-search/common/dto/SearchRequestParams';
+import type SearchResponseDto from '@plurk-search/common/dto/SearchResponse';
 import NextLink from 'next/link';
+import LoadingButton from '~web/components/LoadingButton';
+import Gateway from '~web/lib/Gateway';
+import searchRequestParams2str from '~web/lib/searchRequestParams2str';
 import PlurkCard from './PlurkCard';
 
 export default async function SearchResults({

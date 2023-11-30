@@ -1,5 +1,5 @@
-import { BaseDto } from './base.dto';
-import type { PlurkDto } from './plurk.dto';
+import BaseDto from './Base';
+import type { PlurkDto } from './Plurk';
 
 export class PlurksDto extends BaseDto {
   plurks!: PlurkDto[];
@@ -11,3 +11,4 @@ export class PlurksDto extends BaseDto {
     });
   }
 }
+export default PlurksDto;

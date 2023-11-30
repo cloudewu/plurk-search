@@ -1,8 +1,9 @@
 import { Controller, DefaultValuePipe, Get, Logger, Query } from '@nestjs/common';
-import { AuthToken } from '../common/authToken.decorator';
-import { FilterType } from '../dto/filter-type.enum';
-import type { SearchResponseDto } from '../dto/searchResponse.dto';
-import { ParseEnumPipe } from '../pipe/parse-enum.pipe';
+import type { SearchResponseDto } from '@plurk-search/common/dto/SearchResponse';
+import { FilterType } from '@plurk-search/common/enum/FilterType';
+import { AuthToken } from '~api/common/authToken.decorator';
+import { ParseEnumPipe } from '~api/pipe/parse-enum.pipe';
+
 import { SearchService } from './search.service';
 
 @Controller('search')

@@ -1,7 +1,7 @@
-import FilterType from '@/dto/FilterType.enum';
-import type SearchRequestParams from '@/dto/SearchRequestParams.dto';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import type SearchRequestParams from '@plurk-search/common/dto/SearchRequestParams';
+import FilterType from '@plurk-search/common/enum/FilterType';
 import { Suspense } from 'react';
 import SearchForm from './SearchForm';
 import SearchResults from './SearchResults';

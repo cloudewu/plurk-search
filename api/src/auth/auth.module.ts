@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { PlurkApiModule } from '../gateway/plurk-api.module';
+import { PlurkApiModule } from '~api/gateway/plurk-api.module';
+
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { CryptoService } from './crypto.service';

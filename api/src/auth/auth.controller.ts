@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
-import { AuthToken } from '../common/authToken.decorator';
-import type { AuthResponseDto } from '../dto/authResponse.dto';
+import type { AuthResponse } from '@plurk-search/common/dto/AuthResponse';
+import { AuthToken } from '~api/common/authToken.decorator';
+
 import { AuthService } from './auth.service';
 
 @Controller('/auth')
@@ -10,7 +11,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get()
-  async getAuthenticationPage(): Promise<AuthResponseDto> {
+  async getAuthenticationPage(): Promise<AuthResponse> {
     this.logRequest('/auth', {});
     return await this.authService.getAuthenticationLink();
   }

@@ -1,9 +1,10 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { isNullish } from '../common/util';
-import { AuthDetail } from '../dto/authDetail.dto';
-import { AuthResponseDto } from '../dto/authResponse.dto';
-import { PlurkApiService } from '../gateway/plurk-api.service';
+import { AuthResponse } from '@plurk-search/common/dto/AuthResponse';
+import { isNullish } from '~api/common/util';
+import { AuthDetail } from '~api/dataobject/AuthDetail';
+import { PlurkApiService } from '~api/gateway/plurk-api.service';
+
 import { CryptoService } from './crypto.service';
 
 @Injectable()
@@ -16,9 +17,9 @@ export class AuthService {
     private readonly plurkApiService: PlurkApiService,
   ) {}
 
-  async getAuthenticationLink(): Promise<AuthResponseDto> {
+  async getAuthenticationLink(): Promise<AuthResponse> {
     const { token, secret, authPage } = await this.plurkApiService.getRequestToken();
-    const response = new AuthResponseDto({
+    const response = new AuthResponse({
       authLink: authPage,
       token: this.signAndEncrypt(token, secret),
     });

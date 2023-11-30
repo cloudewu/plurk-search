@@ -1,10 +1,11 @@
 import { BadGatewayException, BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import type { PlurksDto } from '@plurk-search/common/dto/Plurks';
+import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { PlurkClient } from 'plurk2';
-import { isNullish } from '../common/util';
-import { AuthDetail } from '../dto/authDetail.dto';
-import { FilterType } from '../dto/filter-type.enum';
-import type { PlurksDto } from '../dto/plurks.dto';
+import { isNullish } from '~api/common/util';
+import { AuthDetail } from '~api/dataobject/AuthDetail';
+
 import { PlurksSerializer } from './plurks.serializer';
 
 @Injectable()

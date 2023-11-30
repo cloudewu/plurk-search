@@ -1,0 +1,23 @@
+{
+  "name": "@plurk-search/common",
+  "packageManager": "yarn@3.6.1",
+  "private": true,
+  "version": "0.0.1",
+  "description": "A specialized search engine for personal plurk contents.",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc --build",
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.8",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "eslint": "^8.49.0",
+    "eslint-config-standard-with-typescript": "^39.1.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-n": "^16.3.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "typescript": "^5.1.6"
+  }
+}

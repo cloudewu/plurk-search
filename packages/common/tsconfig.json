@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
@@ -15,13 +15,13 @@
     "strict": true,
     "noEmit": false,
     "types": [
-      "jest",
-      "node"
+      "jest"
     ]
   },
+  "include": [
+    "src/**/*.ts"
+  ],
   "exclude": [
-    "node_modules",
-    "dist",
-    "test"
+    "dist"
   ]
 }

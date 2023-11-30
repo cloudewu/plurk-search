@@ -2,7 +2,11 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "~api/*": [ "./api/src/*" ],
+      "~web/*": [ "./web/*" ],
+      "@plurk-search/common/*": [ "./packages/common/src/*" ]
+    },
     "noEmit": true
   }
 }

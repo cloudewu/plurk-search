@@ -1,7 +1,8 @@
 import { createMock, type DeepMocked } from '@golevelup/ts-jest';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { FilterType } from '../dto/filter-type.enum';
-import { SearchResponseDto } from '../dto/searchResponse.dto';
+import { SearchResponseDto } from '@plurk-search/common/dto/SearchResponse';
+import { FilterType } from '@plurk-search/common/enum/FilterType';
+
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 

@@ -1,7 +1,7 @@
-import { PlurkType } from '../dto/plurk-type.enum';
-import { PlurkUserDto } from '../dto/plurk-user.dto';
-import { PlurkDto } from '../dto/plurk.dto';
-import { PlurksDto } from '../dto/plurks.dto';
+import PlurkDto from '@plurk-search/common/dto/Plurk';
+import PlurkUserDto from '@plurk-search/common/dto/PlurkUser';
+import Plurks from '@plurk-search/common/dto/Plurks';
+import PlurkType from '@plurk-search/common/enum/PlurkType';
 
 export const mockApiResponse = {
   plurks: [
@@ -110,7 +110,7 @@ export const mockApiResponse = {
   },
 };
 
-export const expectedSerializedResult = new PlurksDto({
+export const expectedSerializedResult = new Plurks({
   plurks: [
     new PlurkDto({
       id: 1000000000,
