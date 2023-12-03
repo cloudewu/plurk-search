@@ -1,11 +1,11 @@
 import { BadGatewayException, BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
+import type { PlurkDto } from '@plurk-search/common/dto/Plurk';
+import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { PlurkClient } from 'plurk2';
-import { isNullish } from '../common/util';
-import { AuthDetail } from '../dto/authDetail.dto';
-import { FilterType } from '../dto/filter-type.enum';
-import type { PlurksDto } from '../dto/plurks.dto';
-import { PlurksSerializer } from './plurks.serializer';
+import { isNullish } from '~api/common/util';
+import { AuthObject } from '~api/dataobject/AuthObject';
+import { PlurksSerializer } from './plurks.serializer'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 
 @Injectable()
 export class PlurkApiService {
@@ -40,13 +40,13 @@ export class PlurkApiService {
     }
   }
 
-  async authenticate(auth: AuthDetail, code: string) {
+  async authenticate(auth: AuthObject, code: string) {
     this.setupAuth(auth);
     try {
       this.logger.log('Requesting access token');
       const { token, tokenSecret } = await this.plurkApi.getAccessToken(code);
       this.logger.log(`Token received: ${token}`);
-      return new AuthDetail({ token, secret: tokenSecret });
+      return new AuthObject({ token, secret: tokenSecret });
     } catch (err: any) {
       this.logger.error('Failed to get access token.', err.stack, err.message);
       throw new BadRequestException('Invalid Verifier');
@@ -55,7 +55,7 @@ export class PlurkApiService {
     }
   }
 
-  async getTimelinePlurks(auth: AuthDetail, filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
+  async getTimelinePlurks(auth: AuthObject, filter: FilterType, offset: string | undefined): Promise<PlurkDto[]> {
     const params: any = {
       limit: PlurkApiService.RESPONSE_PLURK_COUNT,
       minimal_data: true,
@@ -71,7 +71,7 @@ export class PlurkApiService {
     return this.plurkSerializer.serialize(response);
   }
 
-  async sendRequest(auth: AuthDetail, url: string, params?: any) {
+  async sendRequest(auth: AuthObject, url: string, params?: any) {
     let response = null;
     try {
       this.logRequst(url, params);
@@ -87,7 +87,7 @@ export class PlurkApiService {
     return response;
   }
 
-  setupAuth(auth: AuthDetail) {
+  setupAuth(auth: AuthObject) {
     this.plurkApi.token = auth.token ?? null;
     this.plurkApi.tokenSecret = auth.secret ?? null;
   }

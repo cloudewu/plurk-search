@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { isNullish } from '../common/util';
-import { PlurkType } from '../dto/plurk-type.enum';
-import { PlurkUserDto } from '../dto/plurk-user.dto';
-import { PlurkDto } from '../dto/plurk.dto';
-import { PlurksDto } from '../dto/plurks.dto';
+import { PlurkDto } from '@plurk-search/common/dto/Plurk';
+import { PlurkUserDto } from '@plurk-search/common/dto/PlurkUser';
+import { PlurkType } from '@plurk-search/common/enum/PlurkType';
+import { isNullish } from '~api/common/util';
 
 @Injectable()
 export class PlurksSerializer {
   PLURK_BASE_URL = 'https://www.plurk.com/p/';
 
-  public serialize(apiResponse: any) {
+  public serialize(apiResponse: any): PlurkDto[] {
     const userMap: Map<number, PlurkUserDto> = this.serializePlurkUsers(apiResponse.plurk_users);
-    const plurks: PlurksDto = this.serializePlurks(apiResponse.plurks, userMap);
+    const plurks: PlurkDto[] = this.serializePlurks(apiResponse.plurks, userMap);
     return plurks;
   }
 
@@ -27,8 +26,8 @@ export class PlurksSerializer {
     return userDtoMap;
   }
 
-  private serializePlurks(plurkMap: any, userMap: Map<number, PlurkUserDto>): PlurksDto {
-    const plurks = new PlurksDto();
+  private serializePlurks(plurkMap: any, userMap: Map<number, PlurkUserDto>): PlurkDto[] {
+    const plurks = [];
     for (const plurkIndex in plurkMap) {
       const plurk = this.serializePlurk(plurkMap[plurkIndex]);
       if (plurk === null) continue;
@@ -36,7 +35,7 @@ export class PlurksSerializer {
       if (plurk.ownerId !== undefined) {
         plurk.owner = userMap.get(plurk.ownerId);
       }
-      plurks.plurks.push(plurk);
+      plurks.push(plurk);
     }
     return plurks;
   }
@@ -75,7 +74,7 @@ export class PlurksSerializer {
     return user;
   }
 
-  private serializePlurkType(type: string) {
+  private serializePlurkType(type: string): PlurkType {
     const typeId = Number.parseInt(type);
 
     switch (typeId) {

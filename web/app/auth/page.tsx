@@ -1,12 +1,12 @@
-import NavButton from '@/components/NavButton';
-import SectionTitle from '@/components/SectionTitle';
-import TextBold from '@/components/TextStrong';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
+import NavButton from '~web/components/NavButton';
+import SectionTitle from '~web/components/SectionTitle';
+import TextBold from '~web/components/TextStrong';
 
 export default function AuthPage() {
   const startButtonText = '登入驗證';

@@ -1,10 +1,10 @@
 'use client';
 
-import updateCookies from '@/actions/updateCookies';
-import { COOKIE_TOKEN } from '@/constants';
 import Button, { type ButtonProps } from '@mui/material/Button';
 import { useRouter } from 'next/navigation';
 import { useState, type MouseEventHandler } from 'react';
+import updateCookies from '~web/actions/updateCookies';
+import { COOKIE_TOKEN } from '~web/constants';
 
 const REFRESH_TIMEOUT = 500;
 

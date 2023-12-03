@@ -1,10 +1,10 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { isNullish } from '../common/util';
-import { AuthDetail } from '../dto/authDetail.dto';
-import { AuthResponseDto } from '../dto/authResponse.dto';
-import { PlurkApiService } from '../gateway/plurk-api.service';
-import { CryptoService } from './crypto.service';
+import { JwtService } from '@nestjs/jwt'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
+import { AuthResultsDto } from '@plurk-search/common/dto/AuthResults';
+import { isNullish } from '~api/common/util';
+import { AuthObject } from '~api/dataobject/AuthObject';
+import { PlurkApiService } from '~api/gateway/plurk-api.service'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
+import { CryptoService } from './crypto.service'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 
 @Injectable()
 export class AuthService {
@@ -16,9 +16,9 @@ export class AuthService {
     private readonly plurkApiService: PlurkApiService,
   ) {}
 
-  async getAuthenticationLink(): Promise<AuthResponseDto> {
+  async getAuthenticationLink(): Promise<AuthResultsDto> {
     const { token, secret, authPage } = await this.plurkApiService.getRequestToken();
-    const response = new AuthResponseDto({
+    const response = new AuthResultsDto({
       authLink: authPage,
       token: this.signAndEncrypt(token, secret),
     });
@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   async authenticate(requestToken: string, code: string): Promise<string> {
-    const auth: AuthDetail = this.decryptAndVerify(requestToken);
+    const auth: AuthObject = this.decryptAndVerify(requestToken);
     if (isNullish(code)) {
       AuthService.raiseUnauthorized('Invalid Verifier');
     }
@@ -40,7 +40,7 @@ export class AuthService {
     return this.cryptoService.encrypt(signedMessage);
   }
 
-  decryptAndVerify(token: string): AuthDetail {
+  decryptAndVerify(token: string): AuthObject {
     if (isNullish(token)) {
       AuthService.raiseUnauthorized('Invalid Token');
     }
@@ -48,7 +48,7 @@ export class AuthService {
     const decryptedToken = this.cryptoService.decrypt(token);
     this.verifyToken(decryptedToken);
     const decodedPayload: any = this.jwtService.decode(decryptedToken);
-    return new AuthDetail({ ...decodedPayload });
+    return new AuthObject({ ...decodedPayload });
   }
 
   private verifyToken(token: string) {

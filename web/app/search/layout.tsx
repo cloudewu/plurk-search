@@ -1,6 +1,6 @@
-import PageTitle from '@/components/PageTitle';
 import Box from '@mui/material/Box';
 import type { ReactNode } from 'react';
+import PageTitle from '~web/components/PageTitle';
 
 export default function Layout({
   children,

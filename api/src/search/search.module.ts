@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from '../auth/auth.module';
-import { PlurkApiModule } from '../gateway/plurk-api.module';
+import { AuthModule } from '~api/auth/auth.module';
+import { PlurkApiModule } from '~api/gateway/plurk-api.module';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 

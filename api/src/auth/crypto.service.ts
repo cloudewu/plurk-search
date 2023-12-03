@@ -1,7 +1,7 @@
 // Kudos: https://code.pieces.app/blog/using-encryption-and-hashing-to-increase-security-in-nestjs
 
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 
 @Injectable()

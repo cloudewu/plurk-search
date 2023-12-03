@@ -1,23 +1,24 @@
-import updateCookies from '@/actions/updateCookies';
-import LoadingButton from '@/components/LoadingButton';
-import { COOKIE_TOKEN } from '@/constants';
-import type AuthResponseDto from '@/dto/authResponse.dto';
-import Gateway from '@/lib/Gateway';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import type AuthResultsDto from '@plurk-search/common/dto/AuthResults';
 import { redirect } from 'next/navigation';
+import updateCookies from '~web/actions/updateCookies';
+import LoadingButton from '~web/components/LoadingButton';
+import { COOKIE_TOKEN } from '~web/constants';
+import Gateway from '~web/lib/Gateway';
 
 const SEVEN_DAYS = 7 * 24 * 60 * 60;
 
 export default async function Login() {
-  const data: AuthResponseDto = await Gateway.getAuth();
+  const data: AuthResultsDto = await Gateway.getAuth();
 
   async function submit(formData: FormData) {
     'use server';
 
-    const code = (formData.get('code') ?? '').toString().trim().normalize?.('NFKC');
+    const inputCode = formData.get('code') as string ?? '';
+    const code = inputCode.trim().normalize?.('NFKC');
     const token = await Gateway.postAuth(data.token, code);
     void updateCookies(
       {

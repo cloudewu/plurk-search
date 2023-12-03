@@ -1,8 +1,8 @@
-import BaseDto from './base.dto';
-import type PlurkDto from './Plurk.dto';
+import BaseDto from './Base';
+import type PlurkDto from './Plurk';
 
-export class SearchResponseDto extends BaseDto {
-  request: any;
+export class SearchResultsDto extends BaseDto {
+  request?: Record<string, unknown>;
   plurks!: PlurkDto[];
   counts!: number;
   firstTimestamp?: Date;
@@ -19,4 +19,4 @@ export class SearchResponseDto extends BaseDto {
     });
   }
 };
-export default SearchResponseDto;
+export default SearchResultsDto;
