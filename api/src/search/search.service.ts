@@ -64,10 +64,11 @@ export class SearchService {
       return;
     }
 
+    /* TODO: improve the typing */
     const request = response.request;
     const params: Record<string, string | null> = {
-      query: request.query,
-      filter: FilterType[request.filter],
+      query: request.query as string,
+      filter: FilterType[request.filter as FilterType],
     };
     params.offset = response.lastTimestampStr ?? null;
 

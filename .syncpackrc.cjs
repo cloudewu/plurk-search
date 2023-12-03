@@ -31,11 +31,6 @@ module.exports = {
       ],
       packages: ['**'],
       label: 'unified types',
-    },
-    {
-      dependencies: ['jest'],
-      packages: ['**'],
-      label: 'unified testing framework',
     }
   ],
 };
