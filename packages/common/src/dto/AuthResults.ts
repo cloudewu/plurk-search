@@ -1,7 +1,7 @@
 import BaseDto from './Base';
 
-export class AuthResults extends BaseDto {
+export class AuthResultsDto extends BaseDto {
   authLink!: string;
   token!: string;
 }
-export default AuthResults;
+export default AuthResultsDto;

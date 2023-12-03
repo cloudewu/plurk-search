@@ -1,6 +1,6 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
-import { AuthResults } from '@plurk-search/common/dto/AuthResults';
+import { AuthResultsDto } from '@plurk-search/common/dto/AuthResults';
 import { isNullish } from '~api/common/util';
 import { AuthObject } from '~api/dataobject/AuthObject';
 import { PlurkApiService } from '~api/gateway/plurk-api.service'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
@@ -16,9 +16,9 @@ export class AuthService {
     private readonly plurkApiService: PlurkApiService,
   ) {}
 
-  async getAuthenticationLink(): Promise<AuthResults> {
+  async getAuthenticationLink(): Promise<AuthResultsDto> {
     const { token, secret, authPage } = await this.plurkApiService.getRequestToken();
-    const response = new AuthResults({
+    const response = new AuthResultsDto({
       authLink: authPage,
       token: this.signAndEncrypt(token, secret),
     });

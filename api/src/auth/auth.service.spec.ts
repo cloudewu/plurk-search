@@ -3,7 +3,7 @@ import { UnauthorizedException, UnprocessableEntityException } from '@nestjs/com
 import { ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { AuthResults } from '@plurk-search/common/dto/AuthResults';
+import { AuthResultsDto } from '@plurk-search/common/dto/AuthResults';
 import { AuthObject } from '~api/dataobject/AuthObject';
 import { PlurkApiService } from '~api/gateway/plurk-api.service';
 import { AuthService } from './auth.service';
@@ -50,7 +50,7 @@ describe('AuthService', () => {
       // when
       const response = await authService.getAuthenticationLink();
       // then
-      expect(response).toBeInstanceOf(AuthResults);
+      expect(response).toBeInstanceOf(AuthResultsDto);
       expect(response.authLink).toBe(authPage);
       expect(authService.signAndEncrypt).toBeCalledWith(token, secret);
     });

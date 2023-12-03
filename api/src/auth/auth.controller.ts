@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
-import type { AuthResults } from '@plurk-search/common/dto/AuthResults';
+import type { AuthResultsDto } from '@plurk-search/common/dto/AuthResults';
 import { AuthToken } from '~api/common/authToken.decorator';
 import { AuthService } from './auth.service'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 
@@ -10,7 +10,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get()
-  async getAuthenticationPage(): Promise<AuthResults> {
+  async getAuthenticationPage(): Promise<AuthResultsDto> {
     this.logRequest('/auth', {});
     return await this.authService.getAuthenticationLink();
   }
