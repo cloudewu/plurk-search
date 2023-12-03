@@ -1,5 +1,5 @@
-import type AuthResponseDto from '@plurk-search/common/dto/AuthResponse';
-import type SearchResponseDto from '@plurk-search/common/dto/SearchResponse';
+import type AuthResultsDto from '@plurk-search/common/dto/AuthResults';
+import type SearchResultsDto from '@plurk-search/common/dto/SearchResults';
 import type FilterType from '@plurk-search/common/enum/FilterType';
 import { cookies } from 'next/headers';
 import { COOKIE_TOKEN } from '~web/constants';
@@ -11,9 +11,9 @@ const Gateway = {
   HOST: process.env.API ?? 'http://localhost:9981',
 
   /** ------ ENDPOINTS ------ **/
-  async getAuth(): Promise<AuthResponseDto> {
+  async getAuth(): Promise<AuthResultsDto> {
     const res: Response = await this._request('/auth', { cache: 'no-store' });
-    const response: AuthResponseDto = await res.json();
+    const response: AuthResultsDto = await res.json();
     return response;
   },
 
@@ -40,7 +40,7 @@ const Gateway = {
     return await res.text();
   },
 
-  async getSearch(query?: string, filter?: FilterType, offset?: Date): Promise<SearchResponseDto> {
+  async getSearch(query?: string, filter?: FilterType, offset?: Date): Promise<SearchResultsDto> {
     const token = cookies().get(COOKIE_TOKEN)?.value;
 
     if (token == null || token === '') {
@@ -56,7 +56,7 @@ const Gateway = {
         },
       },
     );
-    const plurks: SearchResponseDto = await res.json();
+    const plurks: SearchResultsDto = await res.json();
     return plurks;
   },
 

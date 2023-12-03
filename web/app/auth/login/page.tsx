@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import type AuthResponseDto from '@plurk-search/common/dto/AuthResponse';
+import type AuthResultsDto from '@plurk-search/common/dto/AuthResults';
 import { redirect } from 'next/navigation';
 import updateCookies from '~web/actions/updateCookies';
 import LoadingButton from '~web/components/LoadingButton';
@@ -12,7 +12,7 @@ import Gateway from '~web/lib/Gateway';
 const SEVEN_DAYS = 7 * 24 * 60 * 60;
 
 export default async function Login() {
-  const data: AuthResponseDto = await Gateway.getAuth();
+  const data: AuthResultsDto = await Gateway.getAuth();
 
   async function submit(formData: FormData) {
     'use server';

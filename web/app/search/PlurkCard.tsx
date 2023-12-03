@@ -32,14 +32,17 @@ export default function ContentCard({ plurk }: { plurk: PlurkDto }) {
         />
       </CardContent>
 
-      <IconButton
-        size='large'
-        sx={{ position: 'absolute', top: 8, right: 20 }}
-        href={plurk.link}
-        target='_blank'
-      >
-        <OpenInNewIcon />
-      </IconButton>
+      { plurk.link != null
+        ? <IconButton
+            size='large'
+            sx={{ position: 'absolute', top: 8, right: 20 }}
+            href={plurk.link}
+            target='_blank'
+          >
+            <OpenInNewIcon />
+          </IconButton>
+        : <></>
+      }
     </Card>
   );
 }

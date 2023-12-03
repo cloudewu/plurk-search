@@ -1,7 +1,7 @@
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import type SearchResponseDto from '@plurk-search/common/dto/SearchResponse';
+import type SearchResultsDto from '@plurk-search/common/dto/SearchResults';
 import NextLink from 'next/link';
 import LoadingButton from '~web/components/LoadingButton';
 import Gateway from '~web/lib/Gateway';
@@ -14,7 +14,7 @@ export default async function SearchResults({
   filter,
   offset,
 }: SearchRequestParams) {
-  const data: SearchResponseDto = await Gateway.getSearch(query, filter, offset);
+  const data: SearchResultsDto = await Gateway.getSearch(query, filter, offset);
   const queryStr = searchRequestParams2str({
     query,
     filter,
