@@ -1,7 +1,6 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
 import type { PlurkDto } from '@plurk-search/common/dto/Plurk';
-import type { PlurksDto } from '@plurk-search/common/dto/Plurks';
 import { SearchResultsDto } from '@plurk-search/common/dto/SearchResults';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import type { AuthService } from '~api/auth/auth.service';
@@ -29,14 +28,14 @@ export class SearchService {
     return this.filterPlurk(plurks, query, filter);
   }
 
-  private filterPlurk(plurkList: PlurksDto, query: string, filter: FilterType): SearchResultsDto {
+  private filterPlurk(plurkList: PlurkDto[], query: string, filter: FilterType): SearchResultsDto {
     const response = new SearchResultsDto({
       request: { query, filter },
     });
     this.addTimestampToResponse(response, plurkList);
 
-    this.logger.log(`Got ${plurkList.plurks.length}. Start filtering results`);
-    for (const plurk of plurkList.plurks) {
+    this.logger.log(`Got ${plurkList.length}. Start filtering results`);
+    for (const plurk of plurkList) {
       if (plurk.content?.includes(query) === true) {
         SearchService.addPlurkToResponse(response, plurk);
       }
@@ -47,16 +46,16 @@ export class SearchService {
     return response;
   }
 
-  private addTimestampToResponse(response: SearchResultsDto, plurkList: PlurksDto): void {
-    if (plurkList.plurks.length <= 0) {
+  private addTimestampToResponse(response: SearchResultsDto, plurkList: PlurkDto[]): void {
+    if (plurkList.length <= 0) {
       return;
     }
 
-    response.firstTimestamp = plurkList.plurks[0].postTime;
-    response.firstTimestampStr = plurkList.plurks[0].postTime?.toISOString();
-    const lastIdx = plurkList.plurks.length - 1;
-    response.lastTimestamp = plurkList.plurks[lastIdx].postTime;
-    response.lastTimestampStr = plurkList.plurks[lastIdx].postTime?.toISOString();
+    response.firstTimestamp = plurkList[0].postTime;
+    response.firstTimestampStr = plurkList[0].postTime?.toISOString();
+    const lastIdx = plurkList.length - 1;
+    response.lastTimestamp = plurkList[lastIdx].postTime;
+    response.lastTimestampStr = plurkList[lastIdx].postTime?.toISOString();
   }
 
   private addNextLinkToResponse(response: SearchResultsDto): void {
@@ -64,7 +63,6 @@ export class SearchService {
       return;
     }
 
-    /* TODO: improve the typing */
     const request = response.request;
     if (request == null) return;
 

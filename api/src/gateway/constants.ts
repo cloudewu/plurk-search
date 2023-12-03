@@ -1,6 +1,5 @@
 import PlurkDto from '@plurk-search/common/dto/Plurk';
 import PlurkUserDto from '@plurk-search/common/dto/PlurkUser';
-import Plurks from '@plurk-search/common/dto/Plurks';
 import PlurkType from '@plurk-search/common/enum/PlurkType';
 
 export const mockApiResponse = {
@@ -110,37 +109,35 @@ export const mockApiResponse = {
   },
 };
 
-export const expectedSerializedResult = new Plurks({
-  plurks: [
-    new PlurkDto({
-      id: 1000000000,
-      link: 'https://www.plurk.com/p/gjdgxs',
-      ownerId: 99999,
-      owner: new PlurkUserDto({
-        id: 99999,
-        nickName: 'anonymous',
-        displayName: 'ಠ_ಠ',
-      }),
-      plurkType: PlurkType.ANONYMOUS,
-      content: 'Content \n Content',
-      contentHtml: 'Content <br/> Content',
-      postTime: new Date('2023-03-05T00:00:00.000Z'),
-      lastEditTime: null,
+export const expectedSerializedResult = [
+  new PlurkDto({
+    id: 1000000000,
+    link: 'https://www.plurk.com/p/gjdgxs',
+    ownerId: 99999,
+    owner: new PlurkUserDto({
+      id: 99999,
+      nickName: 'anonymous',
+      displayName: 'ಠ_ಠ',
     }),
-    new PlurkDto({
-      id: 1500000000,
-      link: 'https://www.plurk.com/p/ot27eo',
-      ownerId: 1000000,
-      owner: new PlurkUserDto({
-        id: 1000000,
-        nickName: 'plurk id',
-        displayName: 'display name',
-      }),
-      plurkType: PlurkType.PUBLIC,
-      content: 'content \n content',
-      contentHtml: 'content <br/> content',
-      postTime: new Date('2023-03-04T00:00:00.000Z'),
-      lastEditTime: null,
+    plurkType: PlurkType.ANONYMOUS,
+    content: 'Content \n Content',
+    contentHtml: 'Content <br/> Content',
+    postTime: new Date('2023-03-05T00:00:00.000Z'),
+    lastEditTime: null,
+  }),
+  new PlurkDto({
+    id: 1500000000,
+    link: 'https://www.plurk.com/p/ot27eo',
+    ownerId: 1000000,
+    owner: new PlurkUserDto({
+      id: 1000000,
+      nickName: 'plurk id',
+      displayName: 'display name',
     }),
-  ],
-});
+    plurkType: PlurkType.PUBLIC,
+    content: 'content \n content',
+    contentHtml: 'content <br/> content',
+    postTime: new Date('2023-03-04T00:00:00.000Z'),
+    lastEditTime: null,
+  }),
+];

@@ -3,7 +3,6 @@ import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { PlurkDto } from '@plurk-search/common/dto/Plurk';
-import { PlurksDto } from '@plurk-search/common/dto/Plurks';
 import { SearchResultsDto } from '@plurk-search/common/dto/SearchResults';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { AuthService } from '~api/auth/auth.service';
@@ -43,7 +42,7 @@ describe('SearchService', () => {
 
   describe('search', () => {
     beforeEach(() => {
-      plurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto());
+      plurkApiService.getTimelinePlurks.mockResolvedValue([]);
     });
 
     it('should response SearchResultDto', async() => {
@@ -79,9 +78,9 @@ describe('SearchService', () => {
       const latestPlurk = new PlurkDto({ postTime: new Date(newestTimeStamp) });
       const oldestPlurk = new PlurkDto({ postTime: new Date(oldestTimeStamp) });
 
-      plurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
-        plurks: [latestPlurk, oldestPlurk],
-      }));
+      plurkApiService.getTimelinePlurks.mockResolvedValue(
+        [latestPlurk, oldestPlurk],
+      );
 
       // when
       let response = await searchService.search(token, query, noFilter, noOffset);
@@ -94,9 +93,7 @@ describe('SearchService', () => {
 
 
       // given
-      plurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
-        plurks: [],
-      }));
+      plurkApiService.getTimelinePlurks.mockResolvedValue([]);
 
       // when
       response = await searchService.search(token, query, noFilter, noOffset);
@@ -110,13 +107,11 @@ describe('SearchService', () => {
 
     it('should filter results by queries', async() => {
       // given
-      const plurkList = new PlurksDto({
-        plurks: [
-          { content: `A plurk that contains query ${query}.` }, // pass
-          { content: 'A plurk that does not contains query.' }, // filtered
-          { content: `${query} A plurk that contains query.` }, // pass
-        ],
-      });
+      const plurkList = [
+        { content: `A plurk that contains query ${query}.` }, // pass
+        { content: 'A plurk that does not contains query.' }, // filtered
+        { content: `${query} A plurk that contains query.` }, // pass
+      ];
       plurkApiService.getTimelinePlurks.mockResolvedValue(plurkList);
       // when
       const response = await searchService.search(token, query, noFilter, noOffset);
@@ -131,9 +126,9 @@ describe('SearchService', () => {
       const oldestTimeStamp = '2023-03-01T00:00:00.000Z';
       const latestPlurk = new PlurkDto({ postTime: new Date(newestTimeStamp) });
       const oldestPlurk = new PlurkDto({ postTime: new Date(oldestTimeStamp) });
-      plurkApiService.getTimelinePlurks.mockResolvedValue(new PlurksDto({
-        plurks: [latestPlurk, oldestPlurk],
-      }));
+      plurkApiService.getTimelinePlurks.mockResolvedValue(
+        [latestPlurk, oldestPlurk],
+      );
       // when
       const filter = FilterType.FAVORITE;
       const response = await searchService.search(token, query, filter, noOffset);

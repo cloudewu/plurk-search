@@ -1,6 +1,6 @@
 import { BadGatewayException, BadRequestException, Injectable, Logger } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
-import type { PlurksDto } from '@plurk-search/common/dto/Plurks';
+import type { PlurkDto } from '@plurk-search/common/dto/Plurk';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { PlurkClient } from 'plurk2';
 import { isNullish } from '~api/common/util';
@@ -56,7 +56,7 @@ export class PlurkApiService {
     }
   }
 
-  async getTimelinePlurks(auth: AuthObject, filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
+  async getTimelinePlurks(auth: AuthObject, filter: FilterType, offset: string | undefined): Promise<PlurkDto[]> {
     const params: any = {
       limit: PlurkApiService.RESPONSE_PLURK_COUNT,
       minimal_data: true,
