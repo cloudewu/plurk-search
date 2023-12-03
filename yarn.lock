@@ -7593,6 +7593,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"maskdata@npm:^1.2.6":
+  version: 1.2.6
+  resolution: "maskdata@npm:1.2.6"
+  dependencies:
+    lodash: ^4.17.21
+  checksum: 59d1d8a27c81ea602749417693017e736c067099b24570d6b28d39f110098e04ee3415c97b10b38e9396673c4eeca34b011e0f95aa284fe96233f8cd56ae2ddc
+  languageName: node
+  linkType: hard
+
 "media-typer@npm:0.3.0":
   version: 0.3.0
   resolution: "media-typer@npm:0.3.0"
@@ -8603,6 +8612,7 @@ __metadata:
     eslint-plugin-import: ^2.29.0
     eslint-plugin-n: ^16.3.1
     eslint-plugin-promise: ^6.1.1
+    maskdata: ^1.2.6
     node-mocks-http: ^1.12.1
     plurk2: ^0.5.2
     reflect-metadata: ^0.1.13

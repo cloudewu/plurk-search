@@ -53,7 +53,6 @@ export class AuthService {
 
   private verifyToken(token: string) {
     try {
-      this.logger.log(`verifying token: ${token}`);
       this.jwtService.verify(token);
     } catch (err: any) {
       this.logger.error('token verification failed', err.stack, err.message);

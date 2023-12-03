@@ -2,6 +2,7 @@ import { Controller, DefaultValuePipe, Get, Logger, Query } from '@nestjs/common
 import type { SearchResultsDto } from '@plurk-search/common/dto/SearchResults';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { AuthToken } from '~api/common/authToken.decorator';
+import maskSecrets from '~api/common/maskSecretsHelper';
 import { ParseEnumPipe } from '~api/pipe/parse-enum.pipe';
 import { SearchService } from './search.service'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 
@@ -23,6 +24,7 @@ export class SearchController {
   }
 
   private logRequest(endpoint: string, params: any) {
-    this.logger.log(`Received Request: ${endpoint}; params: ${JSON.stringify(params)}`);
+    const guardedParams = maskSecrets(params);
+    this.logger.log(`Received Request: ${endpoint}; params: ${JSON.stringify(guardedParams)}`);
   }
 }

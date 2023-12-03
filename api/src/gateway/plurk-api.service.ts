@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config'; // eslint-disable-line @typescri
 import type { PlurkDto } from '@plurk-search/common/dto/Plurk';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { PlurkClient } from 'plurk2';
+import maskSecrets from '~api/common/maskSecretsHelper';
 import { isNullish } from '~api/common/util';
 import { AuthObject } from '~api/dataobject/AuthObject';
 import { PlurksSerializer } from './plurks.serializer'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
@@ -30,7 +31,7 @@ export class PlurkApiService {
       this.logger.log('Requesting request token');
       this.resetAuth();
       const { token, tokenSecret, authPage } = await this.plurkApi.getRequestToken();
-      this.logger.log(`Token received: ${token}`);
+      this.logger.log(`Token received with length: ${token.length}`);
       return { token, secret: tokenSecret, authPage };
     } catch (err: any) {
       this.logger.error('Failed to get reqeust token', err.stack, err.message);
@@ -45,7 +46,7 @@ export class PlurkApiService {
     try {
       this.logger.log('Requesting access token');
       const { token, tokenSecret } = await this.plurkApi.getAccessToken(code);
-      this.logger.log(`Token received: ${token}`);
+      this.logger.log(`Token received. Length = ${token.length}`);
       return new AuthObject({ token, secret: tokenSecret });
     } catch (err: any) {
       this.logger.error('Failed to get access token.', err.stack, err.message);
@@ -105,6 +106,7 @@ export class PlurkApiService {
   }
 
   private logResponse(response: any) {
-    this.logger.log(`Received Plurk API response: ${JSON.stringify(response)}`);
+    const guardedResponse = maskSecrets(response);
+    this.logger.log(`Received Plurk API response: ${JSON.stringify(guardedResponse)}`);
   }
 }

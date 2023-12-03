@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
 import type { AuthResultsDto } from '@plurk-search/common/dto/AuthResults';
 import { AuthToken } from '~api/common/authToken.decorator';
+import { maskSecrets } from '~api/common/maskSecretsHelper';
 import { AuthService } from './auth.service'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 
 @Controller('/auth')
@@ -25,6 +26,7 @@ export class AuthController {
   }
 
   private logRequest(endpoint: string, params: any) {
-    this.logger.log(`Received Request: ${endpoint}; params: ${JSON.stringify(params)}`);
+    const guardedParams = maskSecrets(params);
+    this.logger.log(`Received Request: ${endpoint}; params: ${JSON.stringify(guardedParams)}`);
   }
 }
