@@ -1,11 +1,11 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import type { JwtService } from '@nestjs/jwt';
 import { AuthResponse } from '@plurk-search/common/dto/AuthResponse';
 import { isNullish } from '~api/common/util';
 import { AuthDetail } from '~api/dataobject/AuthDetail';
-import { PlurkApiService } from '~api/gateway/plurk-api.service';
+import type { PlurkApiService } from '~api/gateway/plurk-api.service';
 
-import { CryptoService } from './crypto.service';
+import type { CryptoService } from './crypto.service';
 
 @Injectable()
 export class AuthService {

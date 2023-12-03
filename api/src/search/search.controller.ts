@@ -4,7 +4,7 @@ import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { AuthToken } from '~api/common/authToken.decorator';
 import { ParseEnumPipe } from '~api/pipe/parse-enum.pipe';
 
-import { SearchService } from './search.service';
+import type { SearchService } from './search.service';
 
 @Controller('search')
 export class SearchController {

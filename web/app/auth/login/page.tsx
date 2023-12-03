@@ -17,7 +17,8 @@ export default async function Login() {
   async function submit(formData: FormData) {
     'use server';
 
-    const code = (formData.get('code') ?? '').toString().trim().normalize?.('NFKC');
+    const inputCode = formData.get('code') as string ?? '';
+    const code = inputCode.trim().normalize?.('NFKC');
     const token = await Gateway.postAuth(data.token, code);
     void updateCookies(
       {

@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post } from '@nest
 import type { AuthResponse } from '@plurk-search/common/dto/AuthResponse';
 import { AuthToken } from '~api/common/authToken.decorator';
 
-import { AuthService } from './auth.service';
+import type { AuthService } from './auth.service';
 
 @Controller('/auth')
 export class AuthController {
