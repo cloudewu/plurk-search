@@ -4,7 +4,7 @@ import type PlurkUserDto from './PlurkUser';
 
 export class PlurkDto extends BaseDto {
   id?: number;
-  link!: string;
+  link?: string;
   ownerId?: number;
   owner?: PlurkUserDto;
   plurkType?: PlurkType;

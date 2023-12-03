@@ -4,10 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { PlurkDto } from '@plurk-search/common/dto/Plurk';
 import { PlurksDto } from '@plurk-search/common/dto/Plurks';
-import { SearchResponseDto } from '@plurk-search/common/dto/SearchResponse';
+import { SearchResultsDto } from '@plurk-search/common/dto/SearchResults';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { AuthService } from '~api/auth/auth.service';
-import type { AuthDetail } from '~api/dataobject/AuthDetail';
+import type { AuthObject } from '~api/dataobject/AuthObject';
 import { PlurkApiService } from '~api/gateway/plurk-api.service';
 
 import { SearchService } from './search.service';
@@ -22,7 +22,7 @@ describe('SearchService', () => {
   const noOffset = undefined;
   const noFilter = FilterType.NONE;
   const token = 'This is a token';
-  const credentials: AuthDetail = { token: 'this is a token', secret: 'this is the secret' };
+  const credentials: AuthObject = { token: 'this is a token', secret: 'this is the secret' };
 
   beforeAll(async() => {
     const module: TestingModule = await Test.createTestingModule({
@@ -48,7 +48,7 @@ describe('SearchService', () => {
 
     it('should response SearchResultDto', async() => {
       await expect(searchService.search(token, query, noFilter, noOffset)).resolves
-        .toBeInstanceOf(SearchResponseDto);
+        .toBeInstanceOf(SearchResultsDto);
     });
 
     it('should verify token', async() => {
@@ -149,7 +149,7 @@ describe('SearchService', () => {
     it('should correctly push a plurk into response list and increase the count', () => {
       // given
       const plurk = new PlurkDto({ id: 1 });
-      const response = new SearchResponseDto({
+      const response = new SearchResultsDto({
         plurks: [new PlurkDto({ id: 2 })],
         counts: 1,
       });

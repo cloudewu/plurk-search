@@ -4,7 +4,7 @@ import type { PlurksDto } from '@plurk-search/common/dto/Plurks';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { PlurkClient } from 'plurk2';
 import { isNullish } from '~api/common/util';
-import { AuthDetail } from '~api/dataobject/AuthDetail';
+import { AuthObject } from '~api/dataobject/AuthObject';
 
 import type { PlurksSerializer } from './plurks.serializer';
 
@@ -41,13 +41,13 @@ export class PlurkApiService {
     }
   }
 
-  async authenticate(auth: AuthDetail, code: string) {
+  async authenticate(auth: AuthObject, code: string) {
     this.setupAuth(auth);
     try {
       this.logger.log('Requesting access token');
       const { token, tokenSecret } = await this.plurkApi.getAccessToken(code);
       this.logger.log(`Token received: ${token}`);
-      return new AuthDetail({ token, secret: tokenSecret });
+      return new AuthObject({ token, secret: tokenSecret });
     } catch (err: any) {
       this.logger.error('Failed to get access token.', err.stack, err.message);
       throw new BadRequestException('Invalid Verifier');
@@ -56,7 +56,7 @@ export class PlurkApiService {
     }
   }
 
-  async getTimelinePlurks(auth: AuthDetail, filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
+  async getTimelinePlurks(auth: AuthObject, filter: FilterType, offset: string | undefined): Promise<PlurksDto> {
     const params: any = {
       limit: PlurkApiService.RESPONSE_PLURK_COUNT,
       minimal_data: true,
@@ -72,7 +72,7 @@ export class PlurkApiService {
     return this.plurkSerializer.serialize(response);
   }
 
-  async sendRequest(auth: AuthDetail, url: string, params?: any) {
+  async sendRequest(auth: AuthObject, url: string, params?: any) {
     let response = null;
     try {
       this.logRequst(url, params);
@@ -88,7 +88,7 @@ export class PlurkApiService {
     return response;
   }
 
-  setupAuth(auth: AuthDetail) {
+  setupAuth(auth: AuthObject) {
     this.plurkApi.token = auth.token ?? null;
     this.plurkApi.tokenSecret = auth.secret ?? null;
   }

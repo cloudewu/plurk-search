@@ -2,11 +2,11 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
 import type { PlurkDto } from '@plurk-search/common/dto/Plurk';
 import type { PlurksDto } from '@plurk-search/common/dto/Plurks';
-import { SearchResponseDto } from '@plurk-search/common/dto/SearchResponse';
+import { SearchResultsDto } from '@plurk-search/common/dto/SearchResults';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import type { AuthService } from '~api/auth/auth.service';
 import { isNullish } from '~api/common/util';
-import type { AuthDetail } from '~api/dataobject/AuthDetail';
+import type { AuthObject } from '~api/dataobject/AuthObject';
 import { PlurkApiService } from '~api/gateway/plurk-api.service';
 
 @Injectable()
@@ -23,14 +23,14 @@ export class SearchService {
     token: string,
     query: string,
     filter: FilterType,
-    offset: string | undefined): Promise<SearchResponseDto> {
-    const credentials: AuthDetail = this.authService.decryptAndVerify(token);
+    offset: string | undefined): Promise<SearchResultsDto> {
+    const credentials: AuthObject = this.authService.decryptAndVerify(token);
     const plurks = await this.plurkApiService.getTimelinePlurks(credentials, filter, offset);
     return this.filterPlurk(plurks, query, filter);
   }
 
-  private filterPlurk(plurkList: PlurksDto, query: string, filter: FilterType): SearchResponseDto {
-    const response = new SearchResponseDto({
+  private filterPlurk(plurkList: PlurksDto, query: string, filter: FilterType): SearchResultsDto {
+    const response = new SearchResultsDto({
       request: { query, filter },
     });
     this.addTimestampToResponse(response, plurkList);
@@ -47,7 +47,7 @@ export class SearchService {
     return response;
   }
 
-  private addTimestampToResponse(response: SearchResponseDto, plurkList: PlurksDto): void {
+  private addTimestampToResponse(response: SearchResultsDto, plurkList: PlurksDto): void {
     if (plurkList.plurks.length <= 0) {
       return;
     }
@@ -59,18 +59,20 @@ export class SearchService {
     response.lastTimestampStr = plurkList.plurks[lastIdx].postTime?.toISOString();
   }
 
-  private addNextLinkToResponse(response: SearchResponseDto): void {
+  private addNextLinkToResponse(response: SearchResultsDto): void {
     if (isNullish(response.lastTimestampStr)) {
       return;
     }
 
     /* TODO: improve the typing */
     const request = response.request;
+    if (request == null) return;
+
     const params: Record<string, string | null> = {
       query: request.query as string,
       filter: FilterType[request.filter as FilterType],
+      offset: response.lastTimestampStr ?? null,
     };
-    params.offset = response.lastTimestampStr ?? null;
 
     // todo: refactor
     let nextLink = `${this.configService.get<string>('baseUrl') ?? ''}/search`;
@@ -86,7 +88,7 @@ export class SearchService {
     response.next = nextLink;
   }
 
-  static addPlurkToResponse(response: SearchResponseDto, plurk: PlurkDto) {
+  static addPlurkToResponse(response: SearchResultsDto, plurk: PlurkDto) {
     response.plurks.push(plurk);
     response.counts += 1;
   }

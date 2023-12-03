@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { PlurkClient } from 'plurk2';
-import { AuthDetail } from '~api/dataobject/AuthDetail';
+import { AuthObject } from '~api/dataobject/AuthObject';
 
 import { mockApiResponse } from './constants';
 import { PlurkApiService } from './plurk-api.service';
@@ -68,7 +68,7 @@ describe('PlurkApiService', () => {
   });
 
   describe('authenticate', () => {
-    const auth = new AuthDetail({ token: 'This is a token', secret: 'This is the secret' });
+    const auth = new AuthObject({ token: 'This is a token', secret: 'This is the secret' });
     const code = '1234';
 
     it('should get access token from Plurk App with given auth info', async() => {
@@ -79,7 +79,7 @@ describe('PlurkApiService', () => {
       // then
       expect(plurkApiService.setupAuth).toHaveBeenCalledWith(auth);
       expect(plurkApi.getAccessToken).toHaveBeenCalledWith(code);
-      expect(ret).toBeInstanceOf(AuthDetail);
+      expect(ret).toBeInstanceOf(AuthObject);
       expect(ret.token).toBeDefined();
       expect(ret.token.length).toBeGreaterThan(0);
       expect(ret.secret).toBeDefined();
@@ -170,7 +170,7 @@ describe('PlurkApiService', () => {
       // given
       plurkApi.token = '';
       plurkApi.tokenSecret = '';
-      const auth = new AuthDetail({ token: 'This is a token', secret: 'This is the secret' });
+      const auth = new AuthObject({ token: 'This is a token', secret: 'This is the secret' });
       // when
       plurkApiService.setupAuth(auth);
       // then
@@ -179,7 +179,7 @@ describe('PlurkApiService', () => {
     });
 
     it('should not fail with empty auth', () => {
-      const auth = new AuthDetail();
+      const auth = new AuthObject();
       // when
       expect(() => { plurkApiService.setupAuth(auth); }).not.toThrowError();
     });

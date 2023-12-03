@@ -1,8 +1,8 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import type { JwtService } from '@nestjs/jwt';
-import { AuthResponse } from '@plurk-search/common/dto/AuthResponse';
+import { AuthResults } from '@plurk-search/common/dto/AuthResults';
 import { isNullish } from '~api/common/util';
-import { AuthDetail } from '~api/dataobject/AuthDetail';
+import { AuthObject } from '~api/dataobject/AuthObject';
 import type { PlurkApiService } from '~api/gateway/plurk-api.service';
 
 import type { CryptoService } from './crypto.service';
@@ -17,9 +17,9 @@ export class AuthService {
     private readonly plurkApiService: PlurkApiService,
   ) {}
 
-  async getAuthenticationLink(): Promise<AuthResponse> {
+  async getAuthenticationLink(): Promise<AuthResults> {
     const { token, secret, authPage } = await this.plurkApiService.getRequestToken();
-    const response = new AuthResponse({
+    const response = new AuthResults({
       authLink: authPage,
       token: this.signAndEncrypt(token, secret),
     });
@@ -27,7 +27,7 @@ export class AuthService {
   }
 
   async authenticate(requestToken: string, code: string): Promise<string> {
-    const auth: AuthDetail = this.decryptAndVerify(requestToken);
+    const auth: AuthObject = this.decryptAndVerify(requestToken);
     if (isNullish(code)) {
       AuthService.raiseUnauthorized('Invalid Verifier');
     }
@@ -41,7 +41,7 @@ export class AuthService {
     return this.cryptoService.encrypt(signedMessage);
   }
 
-  decryptAndVerify(token: string): AuthDetail {
+  decryptAndVerify(token: string): AuthObject {
     if (isNullish(token)) {
       AuthService.raiseUnauthorized('Invalid Token');
     }
@@ -49,7 +49,7 @@ export class AuthService {
     const decryptedToken = this.cryptoService.decrypt(token);
     this.verifyToken(decryptedToken);
     const decodedPayload: any = this.jwtService.decode(decryptedToken);
-    return new AuthDetail({ ...decodedPayload });
+    return new AuthObject({ ...decodedPayload });
   }
 
   private verifyToken(token: string) {

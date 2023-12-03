@@ -3,8 +3,8 @@ import { UnauthorizedException, UnprocessableEntityException } from '@nestjs/com
 import { ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { AuthResponse } from '@plurk-search/common/dto/AuthResponse';
-import { AuthDetail } from '~api/dataobject/AuthDetail';
+import { AuthResults } from '@plurk-search/common/dto/AuthResults';
+import { AuthObject } from '~api/dataobject/AuthObject';
 import { PlurkApiService } from '~api/gateway/plurk-api.service';
 
 import { AuthService } from './auth.service';
@@ -51,7 +51,7 @@ describe('AuthService', () => {
       // when
       const response = await authService.getAuthenticationLink();
       // then
-      expect(response).toBeInstanceOf(AuthResponse);
+      expect(response).toBeInstanceOf(AuthResults);
       expect(response.authLink).toBe(authPage);
       expect(authService.signAndEncrypt).toBeCalledWith(token, secret);
     });
@@ -64,7 +64,7 @@ describe('AuthService', () => {
       // given
       const requestToken = 'This is a request token';
       const requestSecret = 'This is the request secret';
-      const auth = new AuthDetail({ token: requestToken, secret: requestSecret });
+      const auth = new AuthObject({ token: requestToken, secret: requestSecret });
       const accessToken = 'This is a access token';
       const accessSecret = 'This is the access secret';
       const encryptedToken = 'This is a signed and encrypted token';
@@ -91,10 +91,10 @@ describe('AuthService', () => {
 
     it('should reject empty code', async() => {
       const token = 'This is a token';
-      jest.spyOn(authService, 'decryptAndVerify').mockImplementationOnce((...args) => new AuthDetail());
+      jest.spyOn(authService, 'decryptAndVerify').mockImplementationOnce((...args) => new AuthObject());
       await expect(callWithArgs(token, undefined)).rejects.toThrow(UnauthorizedException);
 
-      jest.spyOn(authService, 'decryptAndVerify').mockImplementationOnce((...args) => new AuthDetail());
+      jest.spyOn(authService, 'decryptAndVerify').mockImplementationOnce((...args) => new AuthObject());
       await expect(callWithArgs(token, null)).rejects.toThrow(UnauthorizedException);
     });
   });
@@ -127,7 +127,7 @@ describe('AuthService', () => {
       // when
       const response = authService.decryptAndVerify(encryptedToken);
       // then
-      expect(response).toBeInstanceOf(AuthDetail);
+      expect(response).toBeInstanceOf(AuthObject);
       expect(response.token).toBe(token);
       expect(response.secret).toBe(secret);
     });

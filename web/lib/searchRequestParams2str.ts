@@ -1,5 +1,5 @@
-import type SearchRequestParams from '@plurk-search/common/dto/SearchRequestParams';
 import FilterType from '@plurk-search/common/enum/FilterType';
+import type SearchRequestParams from '~web/types/SearchRequestParams';
 
 export default function searchRequestParams2str({
   query,

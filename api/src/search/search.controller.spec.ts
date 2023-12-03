@@ -1,6 +1,6 @@
 import { createMock, type DeepMocked } from '@golevelup/ts-jest';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { SearchResponseDto } from '@plurk-search/common/dto/SearchResponse';
+import { SearchResultsDto } from '@plurk-search/common/dto/SearchResults';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 
 import { SearchController } from './search.controller';
@@ -19,7 +19,7 @@ describe('SearchController', () => {
     controller = module.get(SearchController);
     service = module.get(SearchService);
 
-    service.search.mockResolvedValue(new SearchResponseDto());
+    service.search.mockResolvedValue(new SearchResultsDto());
   });
 
   describe('getSearch', () => {
@@ -34,7 +34,7 @@ describe('SearchController', () => {
       const ret = await controller.getSearch(token, query, filter, offset);
 
       // then
-      expect(ret).toBeInstanceOf(SearchResponseDto);
+      expect(ret).toBeInstanceOf(SearchResultsDto);
     });
 
     it('should accept available parameters', async() => {
