@@ -6,8 +6,9 @@
   "description": "A specialized search engine for personal plurk contents.",
   "license": "MIT",
   "scripts": {
-    "build": "tsc --build",
-    "lint": "eslint \"src/**/*.ts\""
+    "build": "tsc --build tsconfig.build.json",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix"
   },
   "devDependencies": {
     "@types/jest": "^29.5.8",

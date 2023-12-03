@@ -25,6 +25,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "lint": "yarn workspaces foreach run lint",
+    "lint:fix": "yarn workspaces foreach run lint:fix",
     "lint:web": "yarn workspace plurk-search-web lint",
     "lint:api": "yarn workspace plurk-search-api lint",
     "lint:staged": "lint-staged",
