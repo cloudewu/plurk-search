@@ -10,7 +10,6 @@ import { cookies } from 'next/headers';
 import NextLink from 'next/link';
 import ResetTokenButton from '~web/components/ResetTokenButton';
 import { COOKIE_TOKEN } from '~web/constants';
-
 import './globals.css';
 
 export const metadata: Metadata = {

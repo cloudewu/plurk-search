@@ -8,7 +8,6 @@ import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { AuthService } from '~api/auth/auth.service';
 import type { AuthObject } from '~api/dataobject/AuthObject';
 import { PlurkApiService } from '~api/gateway/plurk-api.service';
-
 import { SearchService } from './search.service';
 
 describe('SearchService', () => {

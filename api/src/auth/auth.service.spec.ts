@@ -6,7 +6,6 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { AuthResults } from '@plurk-search/common/dto/AuthResults';
 import { AuthObject } from '~api/dataobject/AuthObject';
 import { PlurkApiService } from '~api/gateway/plurk-api.service';
-
 import { AuthService } from './auth.service';
 import { CryptoService } from './crypto.service';
 

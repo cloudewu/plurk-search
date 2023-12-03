@@ -1,12 +1,11 @@
 import { BadGatewayException, BadRequestException, Injectable, Logger } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 import type { PlurkDto } from '@plurk-search/common/dto/Plurk';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { PlurkClient } from 'plurk2';
 import { isNullish } from '~api/common/util';
 import { AuthObject } from '~api/dataobject/AuthObject';
-
-import type { PlurksSerializer } from './plurks.serializer';
+import { PlurksSerializer } from './plurks.serializer'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 
 @Injectable()
 export class PlurkApiService {

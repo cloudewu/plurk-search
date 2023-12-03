@@ -1,5 +1,4 @@
 import { BadRequestException } from '@nestjs/common';
-
 import { ParseEnumPipe } from './parse-enum.pipe';
 
 enum TestEnum {

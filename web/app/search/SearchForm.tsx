@@ -6,7 +6,6 @@ import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { redirect } from 'next/navigation';
 import LoadingButton from '~web/components/LoadingButton';
 import type SearchRequestParams from '~web/types/SearchRequestParams';
-
 import FilterOptions from './FilterOptions';
 
 export default function SearchForm({

@@ -3,8 +3,7 @@ import type { SearchResultsDto } from '@plurk-search/common/dto/SearchResults';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { AuthToken } from '~api/common/authToken.decorator';
 import { ParseEnumPipe } from '~api/pipe/parse-enum.pipe';
-
-import type { SearchService } from './search.service';
+import { SearchService } from './search.service'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 
 @Controller('search')
 export class SearchController {

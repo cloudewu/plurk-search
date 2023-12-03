@@ -1,11 +1,10 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import type { JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 import { AuthResults } from '@plurk-search/common/dto/AuthResults';
 import { isNullish } from '~api/common/util';
 import { AuthObject } from '~api/dataobject/AuthObject';
-import type { PlurkApiService } from '~api/gateway/plurk-api.service';
-
-import type { CryptoService } from './crypto.service';
+import { PlurkApiService } from '~api/gateway/plurk-api.service'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
+import { CryptoService } from './crypto.service'; // eslint-disable-line @typescript-eslint/consistent-type-imports -- Nestjs dependency injection
 
 @Injectable()
 export class AuthService {

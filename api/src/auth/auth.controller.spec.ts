@@ -1,7 +1,6 @@
 import { createMock, type DeepMocked } from '@golevelup/ts-jest';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { AuthResults } from '@plurk-search/common/dto/AuthResults';
-
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 

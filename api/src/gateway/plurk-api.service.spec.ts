@@ -5,7 +5,6 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { FilterType } from '@plurk-search/common/enum/FilterType';
 import { PlurkClient } from 'plurk2';
 import { AuthObject } from '~api/dataobject/AuthObject';
-
 import { mockApiResponse } from './constants';
 import { PlurkApiService } from './plurk-api.service';
 import { PlurksSerializer } from './plurks.serializer';

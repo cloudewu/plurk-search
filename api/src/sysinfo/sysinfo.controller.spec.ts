@@ -1,5 +1,4 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-
 import { SysinfoController } from './sysinfo.controller';
 
 describe('SysinfoController', () => {

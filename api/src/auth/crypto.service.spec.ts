@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config';
-
 import { CryptoService } from './crypto.service';
 
 describe('CryptoService', () => {
