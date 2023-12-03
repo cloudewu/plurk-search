@@ -1,11 +1,27 @@
+import BaseDto from './Base';
+
 describe('BaseDto', () => {
-  it('passes', () => {
-    const res: number = 1 + 1;
-    expect(res).toBe(2);
+  it('passes given arguments to the instance', () => {
+    const parameters: Record<string, unknown> = {
+      string: 'val1',
+      emptyString: '',
+      num: 1,
+      zero: 0,
+      obj: {
+        key: 'val',
+      },
+      emptyObj: {},
+      arr: ['string', '', 1, 0, { key: 'val' }, {}],
+      emptyArr: [],
+    };
+    const instance = new BaseDto(parameters);
+
+    Object.entries(parameters).forEach(([key, val]) => {
+      expect(instance[key as keyof typeof instance]).toEqual(val);
+    });
   });
 
-  it('fails', () => {
-    const res: number = 1 + 1;
-    expect(res).toBe(0);
+  it('accepts undefined arguments', () => {
+    expect(() => new BaseDto()).not.toThrow();
   });
 });

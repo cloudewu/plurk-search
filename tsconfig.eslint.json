@@ -1,8 +1,10 @@
 {
   "extends": "./tsconfig.json",
   "include": [
-    "./.eslintrc.cjs",
-    "./web/.eslintrc.cjs",
-    "./api/.eslintrc.cjs",
+    "**/*.js",
+    "**/*.ts",
+    "**/*.jsx",
+    "**/*.tsx",
+    "**/*.cjs"
   ]
 }

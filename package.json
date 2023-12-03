@@ -17,8 +17,8 @@
     "start:dev:api": "yarn workspace plurk-search-api start:dev",
     "start:prod:api": "yarn workspace plurk-search-api start:prod",
     "test": "jest",
-    "test:web": "jest --projects web",
-    "test:api": "jest --projects api",
+    "test:api": "jest --selectProjects API",
+    "test:package:common": "jest --selectProjects pack/common",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -55,41 +55,5 @@
   "lint-staged": {
     "api/{src,apps,libs,test}/**/*.ts": "eslint",
     "web/**/*.{ts,tsx,js,jsx}": "eslint"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "./",
-    "collectCoverageFrom": [
-      "**/*.(t|j)s",
-      "!**/*.module.ts"
-    ],
-    "coverageDirectory": "../coverage",
-    "projects": [
-      {
-        "displayName": "API",
-        "testEnvironment": "node",
-        "transform": {
-          "^.+\\.(t|j)s$": [
-            "ts-jest",
-            {
-              "tsconfig": "<rootDir>/api/tsconfig.json"
-            }
-          ]
-        },
-        "moduleNameMapper": {
-          "^~api/(.*)$": "<rootDir>/api/src/$1",
-          "^~web/(.*)$": "<rootDir>/web/$1",
-          "^@plurk-search/common/(.*)$": "<rootDir>/packages/common/src/$1"
-        },
-        "testMatch": [
-          "<rootDir>/api/**/*.spec.ts"
-        ]
-      }
-    ]
   }
 }
