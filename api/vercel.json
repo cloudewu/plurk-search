@@ -2,6 +2,11 @@
   "buildCommand": "yarn build",
   "installCommand": "yarn",
   "outputDirectory": "dist",
+  "functions": {
+    "api/src/main.js": {
+      "runtime": "nodejs"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
