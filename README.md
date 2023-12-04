@@ -14,21 +14,29 @@ The app is still under developing and has no UI currently, but the goal is to ha
 
 工具目前正在開發當中，不確定會拖多久，但目標就是這樣 :D
 
-## About the tool
+## Dev tools
 
-1. Language: [Typescript](https://github.com/microsoft/TypeScript)
-2. Pacakge Manager: [Yarn 2+](https://yarnpkg.com/getting-started/install)
-3. Framework: [Nest](https://github.com/nestjs/nest)
-4. Git hook: [Husky](https://typicode.github.io/husky/#/)
+1. Node: 18.17.0
+2. Language: [Typescript](https://github.com/microsoft/TypeScript)
+3. Pacakge Manager: [Yarn 2+](https://yarnpkg.com/getting-started/install)
+4. API Framework: [Nest](https://github.com/nestjs/nest)
+5. UI Framework: [NextJS](https://nextjs.org/) + [MUI](https://mui.com/material-ui/)
+6. Testing Framework: [Jest](https://jestjs.io/)
+7. Git hook: [Husky](https://typicode.github.io/husky/#/)
 
 ## Getting Started
 
-### Install dependencies
+### Install all dependencies
 ```
 yarn
 ```
 
-### Prepare environments:
+Don't have yarn 2+ on your machine? Check [official installation guide](https://yarnpkg.com/getting-started/install).
+
+Simply put, `corepack enable` for node >= 16.0, `npm i -g corepack` for node < 16.0.
+
+### Prepare api environments
+
 We need to authenticate the user before we are able to pull data from their timeline.
 
 To do so we need the key and secret to communicate with Plurk.
@@ -38,56 +46,45 @@ First, register a new plurk app here: https://www.plurk.com/PlurkApp/
 
 See also: https://www.plurk.com/API
 
-Then copy `.env.sample` under this repo and rename it to `.env`.
+Then goto `/api` folder, copy `.env.sample` under this repo and rename it to `.env`.
 
 Fill in `PLURK_APP_KEY` and `PLURK_APP_SECRET` with the key & secret you got from Plurk.
 
 Enter random strings for `ENCRYPTION_KEY` and `JWT_SECRET`.
 
-Modify `HOST` if you're hosting on a different hostname/port.
+Modify `PROTOCOL`, `HOST`, and `PORT` if you're hosting on a different hostname/port.
 
-### serve
-
-```
-yarn start
-```
-
-Then you can access the api on http://localhost:3000/
-
-### Development
+## Development
 
 ```
 # recompile upon file changes
-yarn start:dev
-
-# debug mode & reload upon file changes
-yarn start:debug
+yarn start:dev:api
 
 # prod
-yarn build && yarn start:prod
+yarn build:api && yarn start:prod:api
 ```
 
-ps. this repo reinforces code style and code quality to pass by Husky hook.
+Then you can access the api on http://localhost:9981/, web app on http://localhost:9980/.
+
+### Linting
+This repo reinforces code style and code quality to pass by Husky hook.
 You must fix all issues from eslint before committing, and must pass all tests before pushing.
 
-linting
+```
+yarn lint:api
+yarn lint:web
+```
+
+### Testing
 
 ```
-yarn lint
-```
+yarn test:api
 
-testing
-
-```
-yarn test
 # or run tests upon file changes - extremely useful for TDD
-yarn test:watch
+yarn test:watch:api
 ```
 
-Editor (e.g., vscode) not able to resolve the package?
-Check https://yarnpkg.com/getting-started/editor-sdks
-
-## Workflow
+### Workflow
 
 ![img](./img/plurk-search-uml.jpg)
 
@@ -96,9 +93,14 @@ API workflow demo
 
 ## Bug Report
 
-Open an issue directly for any bug reports/feature requests/feedbacks.
-Or you can contact me on [Plurk](https://plurk.com/boxbox557).
+[Open an issue directly](https://github.com/cloudewu/plurk-search/issues/new/choose) for any bug reports/feature requests/feedbacks.
+Or you can also contact me on [Plurk](https://plurk.com/boxbox557).
 
 ## License
 
 This tool is [MIT licensed](https://github.com/cloudewu/plurk-search/blob/master/LICENSE).
+
+## Troubleshooting
+
+1. Editor (e.g., vscode) not able to resolve the package.
+   Check https://yarnpkg.com/getting-started/editor-sdks

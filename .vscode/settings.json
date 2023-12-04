@@ -9,7 +9,7 @@
   "editor.rulers": [
     120
   ],
-  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.preferences.quoteStyle": "single",
   "editor.tabSize": 2,
   "editor.codeActionsOnSave": {

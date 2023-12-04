@@ -1,17 +1,12 @@
 {
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2017",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strict": true
+    "baseUrl": ".",
+    "paths": {
+      "~api/*": [ "./api/src/*" ],
+      "~web/*": [ "./web/*" ],
+      "@plurk-search/common/*": [ "./packages/common/src/*" ]
+    },
+    "noEmit": true
   }
 }
