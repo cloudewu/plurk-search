@@ -21,6 +21,7 @@
     "@nestjs/jwt": "^10.0.2",
     "@nestjs/platform-fastify": "^9.3.9",
     "@plurk-search/common": "workspace:*",
+    "maskdata": "^1.2.6",
     "plurk2": "^0.5.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5"
