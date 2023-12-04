@@ -4,7 +4,7 @@
   "outputDirectory": "dist",
   "functions": {
     "api/src/main.js": {
-      "runtime": "nodejs"
+      "runtime": "@vercel/node"
     }
   },
   "rewrites": [
