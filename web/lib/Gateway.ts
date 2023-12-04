@@ -63,7 +63,7 @@ const Gateway = {
   /** ------ UTILITIES ------ **/
   async _request(path: string, options: RequestInit = {}): Promise<Response> {
     const method = options.method ?? 'GET';
-    const action = `${method} ${path}`;
+    const action = `${method} ${this.HOST + path}`;
 
     let res: Response;
     try {
